@@ -54,7 +54,7 @@ WORKDIR /tmp
 # Create Nuxeo user
 RUN useradd -m -d /home/nuxeo -p nuxeo nuxeo && adduser nuxeo sudo && chsh -s /bin/bash nuxeo
 
-ENV NUXEO_VERSION 7.4
+ENV NUXEO_VERSION 7.10
 ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /var/lib/nuxeo/server
 ENV NUXEOCTL /var/lib/nuxeo/server/bin/nuxeoctl
