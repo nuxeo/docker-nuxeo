@@ -60,7 +60,7 @@ ENV NUXEO_HOME /var/lib/nuxeo/server
 ENV NUXEOCTL /var/lib/nuxeo/server/bin/nuxeoctl
 
 # Add distribution
-COPY http://www.nuxeo.org/static/latest-release/nuxeo,cap,tomcat,zip,6.0 /tmp/nuxeo-distribution-tomcat.zip
+ADD http://www.nuxeo.org/static/latest-release/nuxeo,cap,tomcat,zip,6.0 /tmp/nuxeo-distribution-tomcat.zip
 RUN mkdir -p /tmp/nuxeo-distribution \
     && unzip -q -d /tmp/nuxeo-distribution /tmp/nuxeo-distribution-tomcat.zip \
     && DISTDIR=$(/bin/ls /tmp/nuxeo-distribution | head -n 1) \
