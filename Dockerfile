@@ -38,16 +38,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /tmp
 
 # Build ffmpeg
-ENV BUILD_YASM true
-ENV LIBFAAC true
-RUN git clone https://github.com/nuxeo/ffmpeg-nuxeo.git
-WORKDIR ffmpeg-nuxeo
-RUN ./prepare-packages.sh && ./build-yasm.sh \
- && ./build-x264.sh \
- && ./build-libvpx.sh \
- && ./build-ffmpeg.sh \
- && cd /tmp \
- && rm -Rf ffmpeg-nuxeo
+# ENV BUILD_YASM true
+# ENV LIBFAAC true
+# RUN git clone https://github.com/nuxeo/ffmpeg-nuxeo.git
+#WORKDIR ffmpeg-nuxeo
+# RUN ./prepare-packages.sh && ./build-yasm.sh \
+# && ./build-x264.sh \
+# && ./build-libvpx.sh \
+# && ./build-ffmpeg.sh \
+# && cd /tmp \
+# && rm -Rf ffmpeg-nuxeo
 
 
 

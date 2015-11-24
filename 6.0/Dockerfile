@@ -38,23 +38,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /tmp
 
 # Build ffmpeg
-ENV BUILD_YASM true
-ENV LIBFAAC true
-RUN git clone https://github.com/nuxeo/ffmpeg-nuxeo.git
-WORKDIR ffmpeg-nuxeo
-RUN ./prepare-packages.sh && ./build-yasm.sh \
- && ./build-x264.sh \
- && ./build-libvpx.sh \
- && ./build-ffmpeg.sh \
- && cd /tmp \
- && rm -Rf ffmpeg-nuxeo
+# ENV BUILD_YASM true
+# ENV LIBFAAC true
+# RUN git clone https://github.com/nuxeo/ffmpeg-nuxeo.git
+#WORKDIR ffmpeg-nuxeo
+# RUN ./prepare-packages.sh && ./build-yasm.sh \
+# && ./build-x264.sh \
+# && ./build-libvpx.sh \
+# && ./build-ffmpeg.sh \
+# && cd /tmp \
+# && rm -Rf ffmpeg-nuxeo
 
 
 
 # Create Nuxeo user
 RUN useradd -m -d /home/nuxeo -p nuxeo nuxeo && adduser nuxeo sudo && chsh -s /bin/bash nuxeo
 
-ENV NUXEO_VERSION 7.4
+ENV NUXEO_VERSION 6.0
 ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /var/lib/nuxeo/server
 ENV NUXEOCTL /var/lib/nuxeo/server/bin/nuxeoctl
