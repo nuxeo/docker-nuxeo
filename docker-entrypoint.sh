@@ -29,14 +29,10 @@ if [ "$1" = './bin/nuxeoctl' ]; then
     if [ -n "$NUXEO_TEMPLATES" ]; then
       perl -p -i -e "s/^#?(nuxeo.templates=.*$)/\1,${NUXEO_TEMPLATES}/g" $NUXEO_CONF
     fi
-
-
+ 
     # nuxeo.url
-    #echo "nuxeo.url=$HTTP_PROTOCOL://$DOMAIN/nuxeo" >> $NUXEO_CONF
-
-    # connect.url
-    if [ -n "$NUXEO_CONNECT_URL" ]; then
-      echo "org.nuxeo.connect.url=$NUXEO_CONNECT_URL" >> $NUXEO_CONF
+    if [ -n "$NUXEO_URL" ]; then
+      echo "nuxeo.url=$NUXEO_URL" >> $NUXEO_CONF
     fi
 
     if [ -n "$NUXEO_ES_HOSTS" ]; then

@@ -7,8 +7,13 @@ if [ "$1" = './bin/nuxeoctl' ]; then
 
     # PostgreSQL conf
     if [ -n "$NUXEO_DB_TYPE" ]; then
+
+      if [ -n "$NUXEO_DB_HOST" ]; then
+        echo "You have to setup a NUXEO_DB_HOST if not using default DB type"
+        exit 1
+      fi
       
-      NUXEO_DB_HOST=${NUXEO_DB_HOST:-'db_2'}
+      NUXEO_DB_HOST=${NUXEO_DB_HOST}
       NUXEO_DB_NAME=${NUXEO_DB_NAME:-nuxeo}
       NUXEO_DB_USER=${NUXEO_DB_USER:-nuxeo}
       NUXEO_DB_PASSWORD=${NUXEO_DB_PASSWORD:-nuxeo}
@@ -20,17 +25,22 @@ if [ "$1" = './bin/nuxeoctl' ]; then
     	perl -p -i -e "s/^#?nuxeo.db.password=.*$/nuxeo.db.password=${NUXEO_DB_PASSWORD}/g" $NUXEO_CONF
     fi
 
-    # nuxeo.url
-    #echo "nuxeo.url=$HTTP_PROTOCOL://$DOMAIN/nuxeo" >> $NUXEO_CONF
 
-    # connect.url
-    if [ -n "$NUXEO_CONNECT_URL" ]; then
-      echo "org.nuxeo.connect.url=$NUXEO_CONNECT_URL" >> $NUXEO_CONF
+    if [ -n "$NUXEO_TEMPLATES" ]; then
+      perl -p -i -e "s/^#?(nuxeo.templates=.*$)/\1,${NUXEO_TEMPLATES}/g" $NUXEO_CONF
+    fi
+ 
+    # nuxeo.url
+    if [ -n "$NUXEO_URL" ]; then
+      echo "nuxeo.url=$NUXEO_URL" >> $NUXEO_CONF
     fi
 
-    if [ -n "$NUXEO_ES_HOST" ]; then
-      echo "elasticsearch.addressList=${NUXEO_ES_HOST}:9300" >> $NUXEO_CONF
-      echo "elasticsearch.clusterName=elasticsearch" >> $NUXEO_CONF
+    if [ -n "$NUXEO_ES_HOSTS" ]; then
+      echo "elasticsearch.addressList=${NUXEO_ES_HOSTS}" >> $NUXEO_CONF
+      echo "elasticsearch.clusterName=${NUXEO_ES_CLUSTER_NAME:=elasticsearch}" >> $NUXEO_CONF
+      echo "elasticsearch.indexName=${NUXEO_ES_INDEX_NAME:=nuxeo}" >> $NUXEO_CONF
+      echo "elasticsearch.indexNumberOfReplicas=${NUXEO_ES_REPLICAS:=1}" >> $NUXEO_CONF
+      echo "elasticsearch.indexNumberOfShards=${NUXEO_ES_SHARDS:=5}" >> $NUXEO_CONF
     fi
 
     echo "org.nuxeo.automation.trace=true" >> $NUXEO_CONF
@@ -39,6 +49,7 @@ if [ "$1" = './bin/nuxeoctl' ]; then
     if [ -n "$NUXEO_REDIS_HOST" ]; then
       echo "nuxeo.redis.enabled=true" >> $NUXEO_CONF
       echo "nuxeo.redis.host=${NUXEO_REDIS_HOST}" >> $NUXEO_CONF
+      echo "nuxeo.redis.port=${NUXEO_REDIS_PORT:=6379}" >> $NUXEO_CONF
     fi
     
     mkdir -p ${NUXEO_DATA:=/var/lib/nuxeo/data}
@@ -56,6 +67,11 @@ nuxeo.pid.dir=/var/run/nuxeo
 nuxeo.data.dir=$NUXEO_DATA
 nuxeo.wizard.done=true
 EOF
+
+    if [ -f /nuxeo.conf ]; then
+      cat /nuxeo.conf >> $NUXEO_CONF
+    fi
+
     touch $NUXEO_HOME/configured
 
   fi
@@ -67,7 +83,7 @@ EOF
 
 
   ## Executed at each start
-  if [ -n "$NUXEO_CLID"  ] && [$(INSTALL_HOTFIX:'true') = "true" ]; then
+  if [ -n "$NUXEO_CLID"  ] && [$(NUXEO_INSTALL_HOTFIX:'true') = "true" ]; then
       gosu $NUXEO_USER $NUXEOCTL mp-hotfix  
   fi
   # Install packages if exist
