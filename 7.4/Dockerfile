@@ -42,7 +42,7 @@ ENV NUXEOCTL /var/lib/nuxeo/server/bin/nuxeoctl
 
 # Add distribution
 ENV NUXEO_MD5 2141da25bb5022250c8c99f0d19632e3
-ADD http://www.nuxeo.org/static/latest-release/nuxeo,cap,tomcat,zip,7.4 /tmp/nuxeo-distribution-tomcat.zip
+ADD http://community.nuxeo.com/static/releases/nuxeo-7.4/nuxeo-cap-7.4-tomcat.zip /tmp/nuxeo-distribution-tomcat.zip
 RUN echo "$NUXEO_MD5 /tmp/nuxeo-distribution-tomcat.zip" | md5sum -c - \
     && mkdir -p /tmp/nuxeo-distribution \
     && unzip -q -d /tmp/nuxeo-distribution /tmp/nuxeo-distribution-tomcat.zip \
