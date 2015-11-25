@@ -1,7 +1,4 @@
-# Nuxeo Container image is a nuxeo-base image which install expected java and Nuxeo distribution tomcat
-#
-# VERSION               0.0.1
-
+# vim:set ft=dockerfile:
 FROM       java:8
 MAINTAINER Nuxeo <contact@nuxeo.com>
 
@@ -35,22 +32,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ghostscript \
  && rm -rf /var/lib/apt/lists/*  
 
-WORKDIR /tmp
-
-# Build ffmpeg
-# ENV BUILD_YASM true
-# ENV LIBFAAC true
-# RUN git clone https://github.com/nuxeo/ffmpeg-nuxeo.git
-#WORKDIR ffmpeg-nuxeo
-# RUN ./prepare-packages.sh && ./build-yasm.sh \
-# && ./build-x264.sh \
-# && ./build-libvpx.sh \
-# && ./build-ffmpeg.sh \
-# && cd /tmp \
-# && rm -Rf ffmpeg-nuxeo
-
-
-
 # Create Nuxeo user
 RUN useradd -m -d /home/nuxeo -p nuxeo nuxeo && adduser nuxeo sudo && chsh -s /bin/bash nuxeo
 
@@ -60,8 +41,10 @@ ENV NUXEO_HOME /var/lib/nuxeo/server
 ENV NUXEOCTL /var/lib/nuxeo/server/bin/nuxeoctl
 
 # Add distribution
+ENV NUXEO_MD5 de2084b1a6fab4b1c8fb769903b044f2
 ADD http://www.nuxeo.org/static/latest-release/nuxeo,cap,tomcat,zip,7.10 /tmp/nuxeo-distribution-tomcat.zip
-RUN mkdir -p /tmp/nuxeo-distribution \
+RUN echo "$NUXEO_MD5 /tmp/nuxeo-distribution-tomcat.zip" | md5sum -c - \
+    && mkdir -p /tmp/nuxeo-distribution \
     && unzip -q -d /tmp/nuxeo-distribution /tmp/nuxeo-distribution-tomcat.zip \
     && DISTDIR=$(/bin/ls /tmp/nuxeo-distribution | head -n 1) \
     && mkdir -p /var/lib/nuxeo/server \
