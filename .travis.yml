@@ -12,7 +12,7 @@ install:
 before_script:
   - env | sort
   - cd "$VERSION"
-  - image="dmetzler/nuxeo:$VERSION"
+  - image="nuxeo/nuxeo:$VERSION"
 
 script:
   - docker build -t "$image" .
