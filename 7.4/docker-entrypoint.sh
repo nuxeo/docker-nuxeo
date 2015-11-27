@@ -1,4 +1,5 @@
-#!/bin/sh -x
+#!/bin/bash 
+set -e
 
 NUXEO_CONF=$NUXEO_HOME/bin/nuxeo.conf
 
@@ -43,8 +44,13 @@ if [ "$1" = './bin/nuxeoctl' ]; then
       echo "elasticsearch.indexNumberOfShards=${NUXEO_ES_SHARDS:=5}" >> $NUXEO_CONF
     fi
 
-    echo "org.nuxeo.automation.trace=true" >> $NUXEO_CONF
-    echo "org.nuxeo.dev=true" >> $NUXEO_CONF
+    if [ "$NUXEO_AUTOMATION_TRACE" = "true" ]; then
+      echo "org.nuxeo.automation.trace=true" >> $NUXEO_CONF
+    fi
+
+    if [ "$NUXEO_DEV_MODE" = "true" ]; then
+      echo "org.nuxeo.dev=true" >> $NUXEO_CONF
+    fi
 
     if [ -n "$NUXEO_REDIS_HOST" ]; then
       echo "nuxeo.redis.enabled=true" >> $NUXEO_CONF
@@ -56,6 +62,7 @@ if [ "$1" = './bin/nuxeoctl' ]; then
     mkdir -p ${NUXEO_LOG:=/var/log/nuxeo}
     mkdir -p /var/run/nuxeo
 
+    chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_HOME
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_DATA
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_LOG
     chown -R $NUXEO_USER:$NUXEO_USER /var/lib/nuxeo
@@ -83,15 +90,16 @@ EOF
 
 
   ## Executed at each start
-  if [ -n "$NUXEO_CLID"  ] && [$(NUXEO_INSTALL_HOTFIX:'true') = "true" ]; then
-      gosu $NUXEO_USER $NUXEOCTL mp-hotfix  
+  if [ -n "$NUXEO_CLID"  ] && [ $(NUXEO_INSTALL_HOTFIX:='true') = "true" ]; then
+      gosu $NUXEO_USER $NUXEOCTL mp-hotfix --accept=true
   fi
+
   # Install packages if exist
   if [ -n "$NUXEO_PACKAGES" ]; then
     gosu $NUXEO_USER $NUXEOCTL mp-install $NUXEO_PACKAGES --relax=false --accept=true
   fi
 
-  if [ $2 = 'console']; then
+  if [ $2 = "console" ]; then
     exec gosu $NUXEO_USER $NUXEOCTL console
   else
     exec gosu $NUXEO_USER $@
