@@ -65,7 +65,6 @@ if [ "$1" = './bin/nuxeoctl' ]; then
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_HOME
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_DATA
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_LOG
-    chown -R $NUXEO_USER:$NUXEO_USER /var/lib/nuxeo
     chown -R $NUXEO_USER:$NUXEO_USER /var/run/nuxeo
 
     cat << EOF >> $NUXEO_HOME/bin/nuxeo.conf
