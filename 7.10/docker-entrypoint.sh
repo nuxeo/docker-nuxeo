@@ -9,7 +9,7 @@ if [ "$1" = './bin/nuxeoctl' ]; then
     # PostgreSQL conf
     if [ -n "$NUXEO_DB_TYPE" ]; then
 
-      if [ -n "$NUXEO_DB_HOST" ]; then
+      if [ -z "$NUXEO_DB_HOST" ]; then
         echo "You have to setup a NUXEO_DB_HOST if not using default DB type"
         exit 1
       fi
