@@ -1,6 +1,10 @@
 # vim:set ft=dockerfile:
-FROM       java:8
+FROM       java:8-jre
 MAINTAINER Nuxeo <packagers@nuxeo.com>
+
+# Create Nuxeo user
+ENV NUXEO_USER nuxeo
+RUN useradd -m -d /home/$NUXEO_USER -s /bin/bash $NUXEO_USER
 
 # grab gosu for easy step-down from root
 RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
@@ -14,9 +18,8 @@ RUN arch="$(dpkg --print-architecture)" \
 
 
 # Add needed convert tools
-RUN apt-get update && apt-get install -y --no-install-recommends \    
+RUN apt-get update && apt-get install -y --no-install-recommends \
     perl \
-    sudo \
     locales \
     pwgen \
     imagemagick \
@@ -27,21 +30,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libwpd-tools \
     exiftool \
     ghostscript \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*  
-
-# Create Nuxeo user
-RUN useradd -m -d /home/nuxeo -p nuxeo nuxeo && adduser nuxeo sudo && chsh -s /bin/bash nuxeo
+ && rm -rf /var/lib/apt/lists/*
 
 ENV NUXEO_VERSION 7.4
 ENV NUXEO_MD5 2141da25bb5022250c8c99f0d19632e3
-ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /opt/nuxeo/server
-ENV NUXEOCTL $NUXEO_HOME/bin/nuxeoctl
 
 # Add distribution
-ADD http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-cap-${NUXEO_VERSION}-tomcat.zip /tmp/nuxeo-distribution-tomcat.zip
-RUN echo "$NUXEO_MD5 /tmp/nuxeo-distribution-tomcat.zip" | md5sum -c - \
+RUN curl -fsSL "http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-cap-${NUXEO_VERSION}-tomcat.zip" -o /tmp/nuxeo-distribution-tomcat.zip \
+    && echo "$NUXEO_MD5 /tmp/nuxeo-distribution-tomcat.zip" | md5sum -c - \
     && mkdir -p /tmp/nuxeo-distribution $(dirname $NUXEO_HOME) \
     && unzip -q -d /tmp/nuxeo-distribution /tmp/nuxeo-distribution-tomcat.zip \
     && DISTDIR=$(/bin/ls /tmp/nuxeo-distribution | head -n 1) \
@@ -49,10 +46,10 @@ RUN echo "$NUXEO_MD5 /tmp/nuxeo-distribution-tomcat.zip" | md5sum -c - \
     && rm -rf /tmp/nuxeo-distribution* \
     && chmod +x $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh
 
-
+ENV PATH $NUXEO_HOME/bin:$PATH
 
 WORKDIR $NUXEO_HOME
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 EXPOSE 8080
-CMD ["./bin/nuxeoctl","console"]
+CMD ["nuxeoctl","console"]
