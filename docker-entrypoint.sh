@@ -3,7 +3,7 @@ set -e
 
 NUXEO_CONF=$NUXEO_HOME/bin/nuxeo.conf
 
-if [ "$1" = './bin/nuxeoctl' ]; then
+if [ "$1" = 'nuxeoctl' ]; then
   if [ ! -f $NUXEO_HOME/configured ]; then
 
     # PostgreSQL conf
@@ -90,21 +90,21 @@ EOF
 
   ## Executed at each start
   if [ -n "$NUXEO_CLID"  ] && [ $(NUXEO_INSTALL_HOTFIX:='true') = "true" ]; then
-      gosu $NUXEO_USER $NUXEOCTL mp-hotfix --accept=true
+      gosu $NUXEO_USER nuxeoctl mp-hotfix --accept=true
   fi
 
   # Install packages if exist
   if [ -n "$NUXEO_PACKAGES" ]; then
-    gosu $NUXEO_USER $NUXEOCTL mp-install $NUXEO_PACKAGES --relax=false --accept=true
+    gosu $NUXEO_USER nuxeoctl mp-install $NUXEO_PACKAGES --relax=false --accept=true
   fi
 
-  if [ $2 = "console" ]; then
-    exec gosu $NUXEO_USER $NUXEOCTL console
+  if [ "$2" = "console" ]; then
+    exec gosu $NUXEO_USER nuxeoctl console
   else
-    exec gosu $NUXEO_USER $@
+    exec gosu $NUXEO_USER "$@"
   fi
 
 fi
 
 
-exec $@
+exec "$@"
