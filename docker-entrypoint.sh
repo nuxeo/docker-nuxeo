@@ -89,7 +89,7 @@ EOF
 
 
   ## Executed at each start
-  if [ -n "$NUXEO_CLID"  ] && [ $(NUXEO_INSTALL_HOTFIX:='true') = "true" ]; then
+  if [ -n "$NUXEO_CLID"  ] && [ ${NUXEO_INSTALL_HOTFIX:='true'} == "true" ]; then
       gosu $NUXEO_USER nuxeoctl mp-hotfix --accept=true
   fi
 
