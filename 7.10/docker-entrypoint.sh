@@ -62,12 +62,35 @@ if [ "$1" = 'nuxeoctl' ]; then
     mkdir -p ${NUXEO_LOG:=/var/log/nuxeo}
     mkdir -p /var/run/nuxeo
 
+    # The binary store environment variable is defined : 1/ creates the folder with proper rights; 2/ fills in the corresponding property within nuxeo.conf
+    if [ -n "$NUXEO_BINARY_STORE" ]; then
+      mkdir -p $NUXEO_BINARY_STORE
+      chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_BINARY_STORE
+      echo "repository.binary.store=$NUXEO_BINARY_STORE" >> $NUXEO_CONF
+    fi
+
+    # The transient store environment variable is defined : 1/ creates the folder with proper rights; 2/ creates the symbolic link as explained in nuxeo cluster documentation
+    if [ -n "$NUXEO_TRANSIENT_STORE" ]; then
+      mkdir -p $NUXEO_TRANSIENT_STORE
+      chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_TRANSIENT_STORE
+
+      #removes transients stores if exists to allow symbolic link creation
+      if [ -d $NUXEO_DATA/transientstores ]; then
+          rm -rf $NUXEO_DATA/transientstores
+      fi
+      mkdir -p $NUXEO_DATA/transientstores
+      ln -s $NUXEO_TRANSIENT_STORE $NUXEO_DATA/transientstores/default
+    fi
+
+
+
+
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_HOME
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_DATA
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_LOG
     chown -R $NUXEO_USER:$NUXEO_USER /var/run/nuxeo
 
-    cat << EOF >> $NUXEO_HOME/bin/nuxeo.conf
+    cat << EOF >> $NUXEO_CONF
 nuxeo.log.dir=$NUXEO_LOG
 nuxeo.pid.dir=/var/run/nuxeo
 nuxeo.data.dir=$NUXEO_DATA
@@ -97,6 +120,14 @@ EOF
   if [ -n "$NUXEO_PACKAGES" ]; then
     gosu $NUXEO_USER nuxeoctl mp-install $NUXEO_PACKAGES --relax=false --accept=true
   fi
+
+  for f in /docker-entrypoint-initnuxeo.d/*; do
+    case "$f" in
+      *.sh)  echo "$0: running $f"; . "$f" ;;
+      *)     echo "$0: ignoring $f" ;;
+    esac
+    echo
+  done
 
   if [ "$2" = "console" ]; then
     exec gosu $NUXEO_USER nuxeoctl console

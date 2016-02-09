@@ -43,9 +43,10 @@ RUN curl -fsSL "http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-cap-${NUXEO_VE
     && unzip -q -d /tmp/nuxeo-distribution /tmp/nuxeo-distribution-tomcat.zip \
     && DISTDIR=$(/bin/ls /tmp/nuxeo-distribution | head -n 1) \
     && mv /tmp/nuxeo-distribution/$DISTDIR $NUXEO_HOME \
-    && sed -i -e "s/^org.nuxeo.distribution.package.*/org.nuxeo.distribution.package=docker/" $NUXEO_HOME/templates/common/config/distribution.properties \
     && rm -rf /tmp/nuxeo-distribution* \
     && chmod +x $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh
+
+RUN mkdir /docker-entrypoint-initnuxeo.d
 
 ENV PATH $NUXEO_HOME/bin:$PATH
 
