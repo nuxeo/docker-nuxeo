@@ -69,18 +69,6 @@ if [ "$1" = 'nuxeoctl' ]; then
       echo "repository.binary.store=$NUXEO_BINARY_STORE" >> $NUXEO_CONF
     fi
 
-    # The transient store environment variable is defined : 1/ creates the folder with proper rights; 2/ creates the symbolic link as explained in nuxeo cluster documentation
-    if [ -n "$NUXEO_TRANSIENT_STORE" ]; then
-      mkdir -p $NUXEO_TRANSIENT_STORE
-      chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_TRANSIENT_STORE
-
-      #removes transients stores if exists to allow symbolic link creation
-      if [ -d $NUXEO_DATA/transientstores ]; then
-          rm -rf $NUXEO_DATA/transientstores
-      fi
-      mkdir -p $NUXEO_DATA/transientstores
-      ln -s $NUXEO_TRANSIENT_STORE $NUXEO_DATA/transientstores/default
-    fi
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_HOME
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_DATA
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_LOG
