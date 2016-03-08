@@ -81,10 +81,6 @@ if [ "$1" = 'nuxeoctl' ]; then
       mkdir -p $NUXEO_DATA/transientstores
       ln -s $NUXEO_TRANSIENT_STORE $NUXEO_DATA/transientstores/default
     fi
-
-
-
-
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_HOME
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_DATA
     chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_LOG
@@ -120,7 +116,6 @@ EOF
   if [ -n "$NUXEO_PACKAGES" ]; then
     gosu $NUXEO_USER nuxeoctl mp-install $NUXEO_PACKAGES --relax=false --accept=true
   fi
-
   for f in /docker-entrypoint-initnuxeo.d/*; do
     case "$f" in
       *.sh)  echo "$0: running $f"; . "$f" ;;

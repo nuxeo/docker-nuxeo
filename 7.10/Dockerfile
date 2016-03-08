@@ -51,7 +51,6 @@ RUN curl -fsSL "http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-cap-${NUXEO_VE
     && chmod +x $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh
 
 RUN mkdir /docker-entrypoint-initnuxeo.d
-
 ENV PATH $NUXEO_HOME/bin:$PATH
 
 WORKDIR $NUXEO_HOME
