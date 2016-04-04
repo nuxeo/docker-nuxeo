@@ -9,7 +9,6 @@ RUN useradd -m -d /home/$NUXEO_USER -s /bin/bash $NUXEO_USER
 # grab gosu for easy step-down from root
 ENV GOSU_VERSION 1.7
 RUN set -x \
-	&& apt-get update && apt-get install -y --no-install-recommends wget && rm -rf /var/lib/apt/lists/* \
 	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
@@ -17,8 +16,7 @@ RUN set -x \
 	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
 	&& rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
-	&& gosu nobody true \
-	&& apt-get purge -y --auto-remove wget
+	&& gosu nobody true
 
 # Add needed convert tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -57,4 +55,5 @@ WORKDIR $NUXEO_HOME
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 EXPOSE 8080
+EXPOSE 8787
 CMD ["nuxeoctl","console"]
