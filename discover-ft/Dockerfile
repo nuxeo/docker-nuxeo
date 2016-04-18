@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-FROM       nuxeo:FT
+FROM       nuxeo/nuxeo:FT
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 RUN perl -p -i -e "s/^#?nuxeo.wizard.done=.*$/nuxeo.wizard.done=false/g" /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
