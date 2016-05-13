@@ -33,6 +33,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ghostscript \
  && rm -rf /var/lib/apt/lists/*
 
+# Mitigate ImageTragick vulnerability
+ADD imagemagick-policy.xml /etc/ImageMagick/policy.xml
+
 ENV NUXEO_VERSION 8.1
 ENV NUXEO_MD5 db578faf5050a56cb6513986b151b2d8
 ENV NUXEO_HOME /opt/nuxeo/server

@@ -16,7 +16,7 @@ RUN set -x \
 	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
 	&& rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
-	&& gosu nobody true
+	&& gosu nobody true 
 
 # Add needed convert tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -32,6 +32,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     exiftool \
     ghostscript \
  && rm -rf /var/lib/apt/lists/*
+
+# Mitigate ImageTragick vulnerability
+ADD imagemagick-policy.xml /etc/ImageMagick/policy.xml
 
 ENV NUXEO_VERSION 7.4
 ENV NUXEO_MD5 2141da25bb5022250c8c99f0d19632e3
