@@ -15,6 +15,7 @@ fi
 
 mkdir -p $VERSION
 cp docker-entrypoint.sh ./$VERSION/docker-entrypoint.sh
+chmod +x ./$VERSION/docker-entrypoint.sh
 
 cp Dockerfile.template ./$VERSION/Dockerfile
 perl -p -i -e "s/^(ENV NUXEO_VERSION.*$)/ENV NUXEO_VERSION $VERSION/g" ./$VERSION/Dockerfile
