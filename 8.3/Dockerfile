@@ -16,7 +16,7 @@ RUN set -x \
 	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
 	&& rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
-	&& gosu nobody true 
+	&& gosu nobody true
 
 # Add needed convert tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -33,15 +33,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ghostscript \
  && rm -rf /var/lib/apt/lists/*
 
-# Mitigate ImageTragick vulnerability
-ADD imagemagick-policy.xml /etc/ImageMagick/policy.xml
-
 ENV NUXEO_VERSION 8.3
-ENV NUXEO_MD5 5026d97ed18661f0cba3c2505146ea2f
+ENV NUXEO_MD5 6f4a5d5a1df1b024ac2aa27570dd3447
 ENV NUXEO_HOME /opt/nuxeo/server
 
 # Add distribution
-RUN curl -fsSL "http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-cap-${NUXEO_VERSION}-tomcat.zip" -o /tmp/nuxeo-distribution-tomcat.zip \
+RUN curl -fsSL "http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-server-${NUXEO_VERSION}-tomcat.zip" -o /tmp/nuxeo-distribution-tomcat.zip \
     && echo "$NUXEO_MD5 /tmp/nuxeo-distribution-tomcat.zip" | md5sum -c - \
     && mkdir -p /tmp/nuxeo-distribution $(dirname $NUXEO_HOME) \
     && unzip -q -d /tmp/nuxeo-distribution /tmp/nuxeo-distribution-tomcat.zip \
