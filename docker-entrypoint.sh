@@ -58,12 +58,12 @@ if [ "$1" = 'nuxeoctl' ]; then
       echo "nuxeo.redis.port=${NUXEO_REDIS_PORT:=6379}" >> $NUXEO_CONF
     fi
 
-    if [ -n "$NUXEO_DDL_MODE"]; then
+    if [ -n "$NUXEO_DDL_MODE" ]; then
       echo "nuxeo.vcs.ddlmode=${NUXEO_DDL_MODE}" >> $NUXEO_CONF
     fi
 
-    if [ -n "$NUXEO_CONF_PARAM" ]; then
-      printf "%b\n" "$NUXEO_CONF_PARAM" >> $NUXEO_CONF
+    if [ -n "$NUXEO_CUSTOM_PARAM" ]; then
+      printf "%b\n" "$NUXEO_CUSTOM_PARAM" >> $NUXEO_CONF
     fi
     
     mkdir -p ${NUXEO_DATA:=/var/lib/nuxeo/data}
