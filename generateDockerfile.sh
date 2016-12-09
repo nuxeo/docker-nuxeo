@@ -8,7 +8,7 @@ fi
 VERSION=$1
 
 if [ "$2a" == "a" ]; then
-	MD5=`curl http://cdn.nuxeo.com/nuxeo-$VERSION/nuxeo-cap-$VERSION-tomcat.zip.md5 | cut -d' ' -f1`
+	MD5=`curl http://cdn.nuxeo.com/nuxeo-$VERSION/nuxeo-server-$VERSION-tomcat.zip.md5 | cut -d' ' -f1`
 else
     MD5=$2
 fi
