@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 ENV NUXEO_VERSION 8.3
-ENV NUXEO_MD5 6f4a5d5a1df1b024ac2aa27570dd3447
+ENV NUXEO_MD5 38eb8cd45625edef55cf20b07aa61131
 ENV NUXEO_HOME /opt/nuxeo/server
 
 # Add distribution
