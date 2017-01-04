@@ -2,8 +2,9 @@ language: bash
 services: docker
 
 env:
+  - VERSION=master
+  - VERSION=8.10
   - VERSION=7.10
-  - VERSION=7.4
   - VERSION=6.0
 
 install:
