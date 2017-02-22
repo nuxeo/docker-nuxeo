@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-FROM       openjdk:8-jre
+FROM       openjdk:8-jdk
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
 # Create Nuxeo user
