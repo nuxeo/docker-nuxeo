@@ -99,6 +99,8 @@ EOF
 
   # instance.clid
   if [ -n "$NUXEO_CLID" ]; then
+    # Replace --  by a carriage return
+    NUXEO_CLID="${NUXEO_CLID/--/\\n}"
     printf "%b\n" "$NUXEO_CLID" >> $NUXEO_DATA/instance.clid
   fi
 
