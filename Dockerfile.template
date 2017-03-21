@@ -33,12 +33,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ghostscript \
  && rm -rf /var/lib/apt/lists/*
 
-ENV NUXEO_VERSION 7.10
-ENV NUXEO_MD5 de2084b1a6fab4b1c8fb769903b044f2
+
+
 ENV NUXEO_HOME /opt/nuxeo/server
 
+ARG NUXEO_VERSION=7.10
+ARG NUXEO_DIST_URL=http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-server-${NUXEO_VERSION}-tomcat.zip
+ARG NUXEO_MD5=de2084b1a6fab4b1c8fb769903b044f2
+
 # Add distribution
-RUN curl -fsSL "http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-server-${NUXEO_VERSION}-tomcat.zip" -o /tmp/nuxeo-distribution-tomcat.zip \
+RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
     && echo "$NUXEO_MD5 /tmp/nuxeo-distribution-tomcat.zip" | md5sum -c - \
     && mkdir -p /tmp/nuxeo-distribution $(dirname $NUXEO_HOME) \
     && unzip -q -d /tmp/nuxeo-distribution /tmp/nuxeo-distribution-tomcat.zip \

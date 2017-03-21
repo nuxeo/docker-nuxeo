@@ -18,5 +18,5 @@ cp docker-entrypoint.sh ./$VERSION/docker-entrypoint.sh
 chmod +x ./$VERSION/docker-entrypoint.sh
 
 cp Dockerfile.template ./$VERSION/Dockerfile
-perl -p -i -e "s/^(ENV NUXEO_VERSION.*$)/ENV NUXEO_VERSION $VERSION/g" ./$VERSION/Dockerfile
-perl -p -i -e "s/^(ENV NUXEO_MD5.*$)/ENV NUXEO_MD5 $MD5/g" ./$VERSION/Dockerfile
+perl -p -i -e "s/^(ARG NUXEO_VERSION.*$)/ARG NUXEO_VERSION=$VERSION/g" ./$VERSION/Dockerfile
+perl -p -i -e "s/^(ARG NUXEO_MD5.*$)/ARG NUXEO_MD5=$MD5/g" ./$VERSION/Dockerfile
