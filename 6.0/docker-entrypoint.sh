@@ -2,6 +2,8 @@
 set -e
 
 NUXEO_CONF=$NUXEO_HOME/bin/nuxeo.conf
+NUXEO_DATA=${NUXEO_DATA:-/var/lib/nuxeo/data}
+NUXEO_LOG=${NUXEO_LOG:-/var/log/nuxeo}
 
 if [ "$1" = 'nuxeoctl' ]; then
   if [ ! -f $NUXEO_HOME/configured ]; then
@@ -57,7 +59,7 @@ if [ "$1" = 'nuxeoctl' ]; then
       echo "nuxeo.redis.host=${NUXEO_REDIS_HOST}" >> $NUXEO_CONF
       echo "nuxeo.redis.port=${NUXEO_REDIS_PORT:=6379}" >> $NUXEO_CONF
     fi
-    
+
     if [ -n "$NUXEO_DDL_MODE" ]; then
       echo "nuxeo.vcs.ddlmode=${NUXEO_DDL_MODE}" >> $NUXEO_CONF
     fi
@@ -65,22 +67,13 @@ if [ "$1" = 'nuxeoctl' ]; then
     if [ -n "$NUXEO_CUSTOM_PARAM" ]; then
       printf "%b\n" "$NUXEO_CUSTOM_PARAM" >> $NUXEO_CONF
     fi
-
-    mkdir -p ${NUXEO_DATA:=/var/lib/nuxeo/data}
-    mkdir -p ${NUXEO_LOG:=/var/log/nuxeo}
-    mkdir -p /var/run/nuxeo
-
+    
     # The binary store environment variable is defined : 1/ creates the folder with proper rights; 2/ fills in the corresponding property within nuxeo.conf
     if [ -n "$NUXEO_BINARY_STORE" ]; then
       mkdir -p $NUXEO_BINARY_STORE
       chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_BINARY_STORE
       echo "repository.binary.store=$NUXEO_BINARY_STORE" >> $NUXEO_CONF
     fi
-
-    chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_HOME
-    chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_DATA
-    chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_LOG
-    chown -R $NUXEO_USER:$NUXEO_USER /var/run/nuxeo
 
     cat << EOF >> $NUXEO_CONF
 nuxeo.log.dir=$NUXEO_LOG
@@ -107,13 +100,13 @@ EOF
 
   ## Executed at each start
   if [ -n "$NUXEO_CLID"  ] && [ ${NUXEO_INSTALL_HOTFIX:='true'} == "true" ]; then
-      gosu $NUXEO_USER nuxeoctl mp-hotfix --accept=true
+      nuxeoctl mp-hotfix --accept=true
   fi
 
   # Install packages if exist
   if [ -n "$NUXEO_PACKAGES" ]; then
-    gosu $NUXEO_USER nuxeoctl mp-init
-    gosu $NUXEO_USER nuxeoctl mp-install $NUXEO_PACKAGES --relax=false --accept=true
+    nuxeoctl mp-init
+    nuxeoctl mp-install $NUXEO_PACKAGES --relax=false --accept=true
   fi
   for f in /docker-entrypoint-initnuxeo.d/*; do
     case "$f" in
@@ -124,9 +117,9 @@ EOF
   done
 
   if [ "$2" = "console" ]; then
-    exec gosu $NUXEO_USER nuxeoctl console
+    exec nuxeoctl console
   else
-    exec gosu $NUXEO_USER "$@"
+    exec "$@"
   fi
 
 fi
