@@ -70,8 +70,6 @@ if [ "$1" = 'nuxeoctl' ]; then
     
     # The binary store environment variable is defined : 1/ creates the folder with proper rights; 2/ fills in the corresponding property within nuxeo.conf
     if [ -n "$NUXEO_BINARY_STORE" ]; then
-      mkdir -p $NUXEO_BINARY_STORE
-      chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_BINARY_STORE
       echo "repository.binary.store=$NUXEO_BINARY_STORE" >> $NUXEO_CONF
     fi
 
