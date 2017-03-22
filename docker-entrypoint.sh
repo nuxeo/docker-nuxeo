@@ -99,9 +99,12 @@ EOF
       cat /nuxeo.conf >> $NUXEO_CONF
     fi
 
+    nuxeoctl mp-init
+
     touch $NUXEO_HOME/configured
 
   fi
+
 
   # instance.clid
   if [ -n "$NUXEO_CLID" ]; then
@@ -110,6 +113,15 @@ EOF
     printf "%b\n" "$NUXEO_CLID" >> $NUXEO_DATA/instance.clid
   fi
 
+  for f in /docker-entrypoint-initnuxeo.d/*; do
+    case "$f" in
+      *.sh)  echo "$0: running $f"; . "$f" ;;
+      *.zip) echo "$0: installing Nuxeo package $f"; nuxeoctl mp-install $f --accept=true ;;
+      *.clid) echo "$0: moving clid to $NUXEO_DATA"; mv $f $NUXEO_DATA ;;
+      *)     echo "$0: ignoring $f" ;;
+    esac
+    echo
+  done
 
   ## Executed at each start
   if [ -n "$NUXEO_CLID"  ] && [ ${NUXEO_INSTALL_HOTFIX:='true'} == "true" ]; then
@@ -118,16 +130,9 @@ EOF
 
   # Install packages if exist
   if [ -n "$NUXEO_PACKAGES" ]; then
-    nuxeoctl mp-init
     nuxeoctl mp-install $NUXEO_PACKAGES --relax=false --accept=true
   fi
-  for f in /docker-entrypoint-initnuxeo.d/*; do
-    case "$f" in
-      *.sh)  echo "$0: running $f"; . "$f" ;;
-      *)     echo "$0: ignoring $f" ;;
-    esac
-    echo
-  done
+
 
   if [ "$2" = "console" ]; then
     exec nuxeoctl console
