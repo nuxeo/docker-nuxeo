@@ -68,12 +68,10 @@ if [ "$1" = 'nuxeoctl' ]; then
       printf "%b\n" "$NUXEO_CUSTOM_PARAM" >> $NUXEO_CONF
     fi
     
-    # The binary store environment variable is defined : 1/ creates the folder with proper rights; 2/ fills in the corresponding property within nuxeo.conf
     if [ -n "$NUXEO_BINARY_STORE" ]; then
       echo "repository.binary.store=$NUXEO_BINARY_STORE" >> $NUXEO_CONF
     fi
 
-    # The transient store environment variable is defined : 1/ creates the folder with proper rights; 2/ creates the symbolic link as explained in nuxeo cluster documentation
     if [ -n "$NUXEO_TRANSIENT_STORE" ]; then
       #removes transients stores if exists to allow symbolic link creation
       if [ -d $NUXEO_DATA/transientstores ]; then
