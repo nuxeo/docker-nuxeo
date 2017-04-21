@@ -30,7 +30,7 @@ EOF
     fi    
 
     if [ -f /docker-entrypoint-initnuxeo.d/nuxeo.conf ]; then
-      cat /nuxeo.conf >> $NUXEO_CONF
+      cat /docker-entrypoint-initnuxeo.d/nuxeo.conf >> $NUXEO_CONF
     fi    
     touch $NUXEO_HOME/configured
   fi
