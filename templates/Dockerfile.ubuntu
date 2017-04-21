@@ -1,0 +1,20 @@
+# vim:set ft=dockerfile:
+FROM       openjdk:8-jdk
+MAINTAINER Nuxeo <packagers@nuxeo.com>
+
+# Add needed convert tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    perl \
+    locales \
+    pwgen \
+    imagemagick \
+    ffmpeg2theora \
+    ufraw \
+    poppler-utils \
+    libreoffice \
+    libwpd-tools \
+    exiftool \
+    ghostscript \
+ && rm -rf /var/lib/apt/lists/*
+
+%%RUN%%

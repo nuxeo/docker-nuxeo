@@ -1,30 +1,43 @@
 # vim:set ft=dockerfile:
-FROM       openjdk:8-jdk
+FROM centos:7
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
+# install java
+RUN yum install -y \
+       java-1.8.0-openjdk 
+
+# install wget
+RUN yum -y install wget 
+
+#Add repositories need it for ffmpeg2theora and ffmpeg
+ARG NUX_GPG_KEY_URL=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+ARG NUX_DEXTOP_RPM_URL=http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
+RUN yum -y install epel-release \
+    && rpm --import ${NUX_GPG_KEY_URL} \
+    && rpm -Uvh ${NUX_DEXTOP_RPM_URL}
+
 # Add needed convert tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN yum -y upgrade && yum -y install \
     perl \
-    locales \
-    pwgen \
-    imagemagick \
+    ImageMagick \
+    ffmpeg \
     ffmpeg2theora \
     ufraw \
     poppler-utils \
     libreoffice \
     libwpd-tools \
-    exiftool \
-    ghostscript \
- && rm -rf /var/lib/apt/lists/*
+    perl-Image-ExifTool \
+    ghostscript
+
 
 # Remove setuid/setgid binaries from images for security
 RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
 
 ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /opt/nuxeo/server
-ARG NUXEO_VERSION=6.0
-ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-6.0/nuxeo-cap-6.0-tomcat.zip
-ARG NUXEO_MD5=b8cbc0b2858b0697a541be49feb24571
+ARG NUXEO_VERSION=9.1
+ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-9.1/nuxeo-server-9.1-tomcat.zip
+ARG NUXEO_MD5=4134545646fca1a520e0b8dc9d273b2c
 
 
 # Create Nuxeo user
@@ -41,14 +54,18 @@ RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
     && rm -rf /tmp/nuxeo-distribution* \
     && chmod +x $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
     # For arbitrary user in the admin group
-    && chmod g+rwX $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh
+    && chmod g+rwX $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
+    && $NUXEO_HOME/bin/nuxeoctl mp-init
 
-
-RUN chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME
+COPY docker-template $NUXEO_HOME/templates/docker
+COPY nuxeo.conf /etc/nuxeo/nuxeo.conf.template
+ENV NUXEO_CONF /etc/nuxeo/nuxeo.conf
 
 # Protecting writeable directories to support arbitrary User IDs for OpenShift
 # https://docs.openshift.com/container-platform/3.4/creating_images/guidelines.html
-RUN mkdir -p /var/lib/nuxeo/data \
+RUN chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME \
+    && chown -R 1000:0 /etc/nuxeo && chmod g+rwX /etc/nuxeo && rm -f $NUXEO_HOME/bin/nuxeo.conf \
+    && mkdir -p /var/lib/nuxeo/data \
     && chown -R 1000:0 /var/lib/nuxeo/data && chmod -R g+rwX /var/lib/nuxeo/data \
     && mkdir -p /var/log/nuxeo \
     && chown -R 1000:0 /var/log/nuxeo && chmod -R g+rwX /var/log/nuxeo \
@@ -65,6 +82,5 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 EXPOSE 8080
 EXPOSE 8787
 CMD ["nuxeoctl","console"]
-
 
 USER 1000

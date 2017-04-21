@@ -2,10 +2,6 @@
 FROM       openjdk:8-jdk
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
-# Create Nuxeo user
-ENV NUXEO_USER nuxeo
-RUN useradd -m -d /home/$NUXEO_USER -u 1000 -s /bin/bash $NUXEO_USER
-
 # Add needed convert tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     perl \
@@ -21,13 +17,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ghostscript \
  && rm -rf /var/lib/apt/lists/*
 
+# Remove setuid/setgid binaries from images for security
+RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
 
-
+ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /opt/nuxeo/server
-
 ARG NUXEO_VERSION=7.10
-ARG NUXEO_DIST_URL=http://cdn.nuxeo.com/nuxeo-${NUXEO_VERSION}/nuxeo-cap-${NUXEO_VERSION}-tomcat.zip
+ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-7.10/nuxeo-cap-7.10-tomcat.zip
 ARG NUXEO_MD5=de2084b1a6fab4b1c8fb769903b044f2
+
+
+# Create Nuxeo user
+RUN useradd -m -d /home/$NUXEO_USER -u 1000 -s /bin/bash $NUXEO_USER
 
 # Add distribution
 RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
@@ -56,11 +57,8 @@ RUN mkdir -p /var/lib/nuxeo/data \
     && mkdir -p /docker-entrypoint-initnuxeo.d \
     && chown -R 1000:0 /docker-entrypoint-initnuxeo.d && chmod -R g+rwX /docker-entrypoint-initnuxeo.d 
 
-# Remove setuid/setgid binaries from images for security
-RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
-
 ENV PATH $NUXEO_HOME/bin:$PATH
-ENV LAUNCHER_DEBUG -Djvmcheck=nofail
+
 WORKDIR $NUXEO_HOME
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
