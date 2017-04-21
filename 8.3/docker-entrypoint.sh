@@ -2,6 +2,8 @@
 set -e
 
 NUXEO_CONF=$NUXEO_HOME/bin/nuxeo.conf
+NUXEO_DATA=${NUXEO_DATA:-/var/lib/nuxeo/data}
+NUXEO_LOG=${NUXEO_LOG:-/var/log/nuxeo}
 
 if [ "$1" = 'nuxeoctl' ]; then
   if [ ! -f $NUXEO_HOME/configured ]; then
@@ -65,24 +67,12 @@ if [ "$1" = 'nuxeoctl' ]; then
     if [ -n "$NUXEO_CUSTOM_PARAM" ]; then
       printf "%b\n" "$NUXEO_CUSTOM_PARAM" >> $NUXEO_CONF
     fi
-
     
-    mkdir -p ${NUXEO_DATA:=/var/lib/nuxeo/data}
-    mkdir -p ${NUXEO_LOG:=/var/log/nuxeo}
-    mkdir -p /var/run/nuxeo
-
-    # The binary store environment variable is defined : 1/ creates the folder with proper rights; 2/ fills in the corresponding property within nuxeo.conf
     if [ -n "$NUXEO_BINARY_STORE" ]; then
-      mkdir -p $NUXEO_BINARY_STORE
-      chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_BINARY_STORE
       echo "repository.binary.store=$NUXEO_BINARY_STORE" >> $NUXEO_CONF
     fi
 
-    # The transient store environment variable is defined : 1/ creates the folder with proper rights; 2/ creates the symbolic link as explained in nuxeo cluster documentation
     if [ -n "$NUXEO_TRANSIENT_STORE" ]; then
-      mkdir -p $NUXEO_TRANSIENT_STORE
-      chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_TRANSIENT_STORE
-
       #removes transients stores if exists to allow symbolic link creation
       if [ -d $NUXEO_DATA/transientstores ]; then
           rm -rf $NUXEO_DATA/transientstores
@@ -90,11 +80,7 @@ if [ "$1" = 'nuxeoctl' ]; then
       mkdir -p $NUXEO_DATA/transientstores
       ln -s $NUXEO_TRANSIENT_STORE $NUXEO_DATA/transientstores/default
     fi
-    chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_HOME
-    chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_DATA
-    chown -R $NUXEO_USER:$NUXEO_USER $NUXEO_LOG
-    chown -R $NUXEO_USER:$NUXEO_USER /var/run/nuxeo
-
+    
     cat << EOF >> $NUXEO_CONF
 nuxeo.log.dir=$NUXEO_LOG
 nuxeo.pid.dir=/var/run/nuxeo
@@ -106,37 +92,45 @@ EOF
       cat /nuxeo.conf >> $NUXEO_CONF
     fi
 
+    nuxeoctl mp-init
+
     touch $NUXEO_HOME/configured
 
   fi
 
+
   # instance.clid
   if [ -n "$NUXEO_CLID" ]; then
+    # Replace --  by a carriage return
+    NUXEO_CLID="${NUXEO_CLID/--/\\n}"
     printf "%b\n" "$NUXEO_CLID" >> $NUXEO_DATA/instance.clid
   fi
 
-
-  ## Executed at each start
-  if [ -n "$NUXEO_CLID"  ] && [ ${NUXEO_INSTALL_HOTFIX:='true'} == "true" ]; then
-      gosu $NUXEO_USER nuxeoctl mp-hotfix --accept=true
-  fi
-
-  # Install packages if exist
-  if [ -n "$NUXEO_PACKAGES" ]; then
-    gosu $NUXEO_USER nuxeoctl mp-install $NUXEO_PACKAGES --relax=false --accept=true
-  fi
   for f in /docker-entrypoint-initnuxeo.d/*; do
     case "$f" in
       *.sh)  echo "$0: running $f"; . "$f" ;;
+      *.zip) echo "$0: installing Nuxeo package $f"; nuxeoctl mp-install $f --accept=true ;;
+      *.clid) echo "$0: moving clid to $NUXEO_DATA"; mv $f $NUXEO_DATA ;;
       *)     echo "$0: ignoring $f" ;;
     esac
     echo
   done
 
+  ## Executed at each start
+  if [ -n "$NUXEO_CLID"  ] && [ ${NUXEO_INSTALL_HOTFIX:='true'} == "true" ]; then
+      nuxeoctl mp-hotfix --accept=true
+  fi
+
+  # Install packages if exist
+  if [ -n "$NUXEO_PACKAGES" ]; then
+    nuxeoctl mp-install $NUXEO_PACKAGES --relax=false --accept=true
+  fi
+
+
   if [ "$2" = "console" ]; then
-    exec gosu $NUXEO_USER nuxeoctl console
+    exec nuxeoctl console
   else
-    exec gosu $NUXEO_USER "$@"
+    exec "$@"
   fi
 
 fi

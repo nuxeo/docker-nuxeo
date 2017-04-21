@@ -1,21 +1,33 @@
 # vim:set ft=dockerfile:
-FROM       openjdk:8-jdk
+FROM centos:7
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
+# install java
+RUN yum install -y \
+       java-1.8.0-openjdk 
+
+# install wget
+RUN yum -y install wget 
+
+#Add repositories need it for ffmpeg2theora and ffmpeg
+ARG NUX_GPG_KEY_URL=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+ARG NUX_DEXTOP_RPM_URL=http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
+RUN yum -y install epel-release \
+    && rpm --import ${NUX_GPG_KEY_URL} \
+    && rpm -Uvh ${NUX_DEXTOP_RPM_URL}
+
 # Add needed convert tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN yum -y upgrade && yum -y install \
     perl \
-    locales \
-    pwgen \
-    imagemagick \
+    ImageMagick \
+    ffmpeg \
     ffmpeg2theora \
     ufraw \
     poppler-utils \
     libreoffice \
     libwpd-tools \
-    exiftool \
-    ghostscript \
- && rm -rf /var/lib/apt/lists/*
+    perl-Image-ExifTool \
+    ghostscript
 
 # Remove setuid/setgid binaries from images for security
 RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
