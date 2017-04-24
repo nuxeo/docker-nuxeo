@@ -37,7 +37,8 @@ ENV NUXEO_HOME /opt/nuxeo/server
 ARG NUXEO_VERSION=8.3
 ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-8.3/nuxeo-server-8.3-tomcat.zip
 ARG NUXEO_MD5=38eb8cd45625edef55cf20b07aa61131
-
+# https://jira.nuxeo.com/browse/NXP-20189
+ENV LAUNCHER_DEBUG -Djvmcheck=nofail
 
 # Create Nuxeo user
 RUN useradd -m -d /home/$NUXEO_USER -u 1000 -s /bin/bash $NUXEO_USER
