@@ -37,6 +37,7 @@ for tp in target_platforms:
     
     for variant in VARIANTS:
         pre91 = StrictVersion(version) < StrictVersion("9.1")
+        pre810 = StrictVersion(version) < StrictVersion("8.10")
 
         if variant == 'ubuntu':
             dockerfile = '%s/Dockerfile' % version
@@ -55,6 +56,10 @@ for tp in target_platforms:
                 run_content = tmpfile.read()
         with open('templates/Dockerfile-env', 'r') as tmpfile:
            env_content = tmpfile.read()
+
+        # Workaround for Java version comparison bug : https://jira.nuxeo.com/browse/NXP-20189
+        if pre810:
+            env_content = env_content + "# https://jira.nuxeo.com/browse/NXP-20189\nENV LAUNCHER_DEBUG -Djvmcheck=nofail"
 
         env_content = env_content.replace('%%NUXEO_VERSION%%', version)
         env_content = env_content.replace('%%NUXEO_DIST_URL%%', dist_url)
