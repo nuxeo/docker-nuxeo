@@ -56,9 +56,9 @@ join() {
 	local out; printf -v out "${sep//%/%%}%s" "$@"
 	echo "${out#$sep}"
 }
-for variant in {jdk8,centos}; do
+for variant in {ubuntu,centos}; do
 	for version in "${versions[@]}"; do
-		if [ $variant == "jdk8" ]; then
+		if [ $variant == "ubuntu" ]; then
 			DIR=$version		
 		else
 			DIR=$version/$variant
@@ -75,7 +75,7 @@ for variant in {jdk8,centos}; do
 
 		variantAliases=( "${versionAliases[@]/%/-$variant}" )
 		variantAliases=( "${variantAliases[@]//latest-/}" )
-		variantAliases=( "${variantAliases[@]/-jdk8/}" )
+		variantAliases=( "${variantAliases[@]/-ubuntu/}" )
 
 
 		echo

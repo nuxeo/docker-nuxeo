@@ -44,7 +44,8 @@ for tp in target_platforms:
             travis.append(' - VERSION=%s' % version)
         else:
             dockerfile = '%s/%s/Dockerfile' % (version, variant)
-            travis.append(' - VERSION=%s VARIANT=%s' % (version, variant))
+            if variant != 'rhel':
+                travis.append(' - VERSION=%s VARIANT=%s' % (version, variant))
 
         with open('templates/Dockerfile.' + variant , 'r') as tmpfile:
            template = tmpfile.read()

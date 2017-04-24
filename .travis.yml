@@ -4,16 +4,12 @@ services: docker
 env:
  - VERSION=6.0
  - VERSION=6.0 VARIANT=centos
- - VERSION=6.0 VARIANT=rhel
  - VERSION=7.10
  - VERSION=7.10 VARIANT=centos
- - VERSION=7.10 VARIANT=rhel
  - VERSION=8.10
  - VERSION=8.10 VARIANT=centos
- - VERSION=8.10 VARIANT=rhel
  - VERSION=9.1
  - VERSION=9.1 VARIANT=centos
- - VERSION=9.1 VARIANT=rhel
 
 install:
   - git clone https://github.com/docker-library/official-images.git ~/official-images
