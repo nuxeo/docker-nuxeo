@@ -67,7 +67,6 @@ for variant in {ubuntu,centos}; do
 		[ -f "$DIR/Dockerfile" ] || continue
 
 		commit="$(dirCommit "$DIR")"
-
 		versionAliases=(
 			$version
 			${aliases[$version]:-}

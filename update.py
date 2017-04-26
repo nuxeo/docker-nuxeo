@@ -81,9 +81,8 @@ for tp in target_platforms:
         else:
             shutil.copy("templates/docker-entrypoint.sh", d)
             shutil.copy("templates/nuxeo.conf", d)
-            if os.path.exists(d + '/docker-template'):
+            if(os.path.exists(d + '/docker-template')):
                 shutil.rmtree(d + '/docker-template')
-
             shutil.copytree("templates/docker-template", d + '/docker-template')
 
 
