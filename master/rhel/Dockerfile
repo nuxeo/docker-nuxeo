@@ -1,21 +1,43 @@
 # vim:set ft=dockerfile:
-FROM       openjdk:8-jdk
+FROM registry.access.redhat.com/rhel7
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
+# install java
+RUN yum install -y \
+       java-1.8.0-openjdk 
+
+# install wget
+RUN yum -y install wget 
+# install unzip
+RUN yum -y install unzip 
+
+#Add repositories need it for ffmpeg2theora and ffmpeg
+ARG EPEL_RPM_URL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+ARG NUX_GPG_KEY_URL=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+ARG NUX_DEXTOP_RPM_URL=http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
+RUN wget ${EPEL_RPM_URL} \
+    && rpm -Uvh epel-release-latest-7*.rpm \
+    && rpm --import ${NUX_GPG_KEY_URL} \
+    && rpm -Uvh ${NUX_DEXTOP_RPM_URL}
+
+## must find another way to install it, need it for ffmpeg
+ARG NUX_DEXTOP_FRIBIDI_RPM_URL=ftp://ftp.pbone.net/mirror/li.nux.ro/download/nux/dextop/retired/libfribidi-0.19.2-3.el7.nux.x86_64.rpm
+RUN rpm -Uvh ${NUX_DEXTOP_FRIBIDI_RPM_URL}
+
+# enable repo for libreoffice
+RUN yum-config-manager --enable rhel-7-server-optional-rpms
 # Add needed convert tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN yum -y upgrade && yum -y install \
     perl \
-    locales \
-    pwgen \
-    imagemagick \
+    ImageMagick \
+    ffmpeg \
     ffmpeg2theora \
     ufraw \
     poppler-utils \
-    libreoffice \
+    libreoffice-headless  \
     libwpd-tools \
-    exiftool \
-    ghostscript \
- && rm -rf /var/lib/apt/lists/*
+    perl-Image-ExifTool \
+    ghostscript    
 
 
 # Remove setuid/setgid binaries from images for security
@@ -23,9 +45,9 @@ RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
 
 ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /opt/nuxeo/server
-ARG NUXEO_VERSION=9.1
-ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-9.1/nuxeo-server-9.1-tomcat.zip
-ARG NUXEO_MD5=4134545646fca1a520e0b8dc9d273b2c
+ARG NUXEO_VERSION=master
+ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/latest-snapshot/nuxeo-server-tomcat,SNAPSHOT.zip
+ARG NUXEO_MD5=noMD5check
 
 
 # Create Nuxeo user

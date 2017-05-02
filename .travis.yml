@@ -10,6 +10,8 @@ env:
  - VERSION=8.10 VARIANT=centos
  - VERSION=9.1
  - VERSION=9.1 VARIANT=centos
+ - VERSION=master
+ - VERSION=master VARIANT=centos
 
 install:
   - git clone https://github.com/docker-library/official-images.git ~/official-images

@@ -18,6 +18,12 @@ request.add_header("Authorization", "Basic %s" % base64string)
 target_platforms_json = urllib2.urlopen(request).read()
 target_platforms = json.loads(target_platforms_json)
 
+# Specific case for SNAPSHOT release
+master = {}
+master['version'] = "master"
+master['downloadLink'] = "http://community.nuxeo.com/static/latest-snapshot/nuxeo-server-tomcat,SNAPSHOT.zip"
+target_platforms.append(master)
+
 
 MIN_VERSION='6.0'
 VARIANTS = ['ubuntu', 'centos', 'rhel']
@@ -27,17 +33,20 @@ travis = []
 for tp in target_platforms:
     
     version = tp['version']
-    if StrictVersion(MIN_VERSION) > StrictVersion(version):
+    if version != "master" and StrictVersion(version) < StrictVersion(MIN_VERSION) :
         continue
 
     print "Generating files for %s" % tp['version']
     dist_url = tp['downloadLink']
-    md5 = urllib2.urlopen("%s.md5" % dist_url).read().split(" ")[0]
+    if version == "master":
+        md5="noMD5check"
+    else: 
+        md5 = urllib2.urlopen("%s.md5" % dist_url).read().split(" ")[0]
 
     
     for variant in VARIANTS:
-        pre91 = StrictVersion(version) < StrictVersion("9.1")
-        pre810 = StrictVersion(version) < StrictVersion("8.10")
+        pre91 = version != "master" and StrictVersion(version) < StrictVersion("9.1")
+        pre810 = version != "master" and StrictVersion(version) < StrictVersion("8.10")
 
         if variant == 'ubuntu':
             dockerfile = '%s/Dockerfile' % version
