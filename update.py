@@ -55,9 +55,12 @@ for tp in target_platforms:
             dockerfile = '%s/%s/Dockerfile' % (version, variant)
             if variant != 'rhel':
                 travis.append(' - VERSION=%s VARIANT=%s' % (version, variant))
-
-        with open('templates/Dockerfile.' + variant , 'r') as tmpfile:
-           template = tmpfile.read()
+        if pre810 and os.path.exists('templates/pre-8.10/Dockerfile.' + variant):
+            with open('templates/pre-8.10/Dockerfile.' + variant , 'r') as tmpfile:
+               template = tmpfile.read()
+        else:
+            with open('templates/Dockerfile.' + variant , 'r') as tmpfile:
+               template = tmpfile.read()
         if pre91:
             with open('templates/pre-9.1/Dockerfile-run', 'r') as tmpfile:
                 run_content = tmpfile.read()

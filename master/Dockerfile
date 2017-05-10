@@ -3,7 +3,8 @@ FROM       openjdk:8-jdk
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
 # Add needed convert tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN echo "deb http://http.debian.net/debian jessie-backports main contrib non-free" >> /etc/apt/sources.list \
+ && apt-get update && apt-get install -y --no-install-recommends \
     perl \
     locales \
     pwgen \
@@ -11,10 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg2theora \
     ufraw \
     poppler-utils \
-    libreoffice \
     libwpd-tools \
     exiftool \
     ghostscript \
+ && apt-get install -t jessie-backports libreoffice \
  && rm -rf /var/lib/apt/lists/*
 
 
