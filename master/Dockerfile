@@ -15,7 +15,7 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main contrib non-fr
     libwpd-tools \
     exiftool \
     ghostscript \
- && apt-get install -t jessie-backports libreoffice \
+ && apt-get install  -y --no-install-recommends -t jessie-backports libreoffice \
  && rm -rf /var/lib/apt/lists/*
 
 
