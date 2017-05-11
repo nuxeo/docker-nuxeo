@@ -16,6 +16,10 @@ declare -A aliases=(
 	[9.1]='9 FT latest'
 )
 
+variants=(
+	ubuntu
+)
+
 self="$(basename "$BASH_SOURCE")"
 cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
@@ -45,7 +49,7 @@ dirCommit() {
 cat <<-EOH
 # this file is generated via https://github.com/nuxeo/docker-nuxeo/blob/$(fileCommit "$self")/$self
 
-Maintainers: Damien Metzler <dmetzler@nuxeo.com> (@dmetzler),
+Maintainers: Damien Metzler <dmetzler@nuxeo.com> (@damienmetzler),
              Arnaud Kervern <akervern@nuxeo.com> (@arnaudke)
 GitRepo: https://github.com/nuxeo/docker-nuxeo.git
 EOH
@@ -56,7 +60,7 @@ join() {
 	local out; printf -v out "${sep//%/%%}%s" "$@"
 	echo "${out#$sep}"
 }
-for variant in {ubuntu,centos}; do
+for variant in "${variants[@]}"; do
 	for version in "${versions[@]}"; do
 		if [ $variant == "ubuntu" ]; then
 			DIR=$version		
@@ -73,7 +77,6 @@ for variant in {ubuntu,centos}; do
 		)
 
 		variantAliases=( "${versionAliases[@]/%/-$variant}" )
-		variantAliases=( "${variantAliases[@]//latest-/}" )
 		variantAliases=( "${variantAliases[@]/-ubuntu/}" )
 
 
