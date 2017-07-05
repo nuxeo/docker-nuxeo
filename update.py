@@ -45,6 +45,7 @@ for tp in target_platforms:
 
     
     for variant in VARIANTS:
+        pre92 = version != "master" and StrictVersion(version) < StrictVersion("9.2")
         pre91 = version != "master" and StrictVersion(version) < StrictVersion("9.1")
         pre810 = version != "master" and StrictVersion(version) < StrictVersion("8.10")
 
@@ -88,14 +89,22 @@ for tp in target_platforms:
         with open(dockerfile, 'w') as dfile:
           dfile.write(docker_content)
         
+
         if pre91:            
             shutil.copy("templates/pre-9.1/docker-entrypoint.sh", d)
         else:
-            shutil.copy("templates/docker-entrypoint.sh", d)
-            shutil.copy("templates/nuxeo.conf", d)
+            shutil.copy("templates/docker-entrypoint.sh", d)            
             if(os.path.exists(d + '/docker-template')):
                 shutil.rmtree(d + '/docker-template')
             shutil.copytree("templates/docker-template", d + '/docker-template')
+
+            if pre92:
+                shutil.copy("templates/pre-9.2/nuxeo.conf", d)
+            else:
+                shutil.copy("templates/nuxeo.conf", d)
+
+
+
 
 
 
