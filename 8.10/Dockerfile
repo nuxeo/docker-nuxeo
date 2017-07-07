@@ -3,8 +3,7 @@ FROM       openjdk:8-jdk
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
 # Add needed convert tools
-RUN echo "deb http://http.debian.net/debian jessie-backports main contrib non-free" >> /etc/apt/sources.list \
- && apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     perl \
     locales \
     pwgen \
@@ -15,7 +14,7 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main contrib non-fr
     libwpd-tools \
     exiftool \
     ghostscript \
- && apt-get install  -y --no-install-recommends -t jessie-backports libreoffice \
+    libreoffice \
  && rm -rf /var/lib/apt/lists/*
 
 # Remove setuid/setgid binaries from images for security
