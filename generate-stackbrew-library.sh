@@ -7,13 +7,14 @@ versions=(
 	7.10
 	8.10
 	9.1
+        9.2
 )
 
 declare -A aliases=(
 	[6.0]='6 LTS-2014'
 	[7.10]='7 LTS-2015'
 	[8.10]='8 LTS-2016 LTS'
-	[9.1]='9 FT latest'
+	[9.2]='9 FT latest'
 )
 
 variants=(
