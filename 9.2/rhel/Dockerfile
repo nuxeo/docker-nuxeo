@@ -2,14 +2,24 @@
 FROM registry.access.redhat.com/rhel7
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
+LABEL name="nuxeo/nuxeo" \
+      vendor="Nuxeo" \
+      version="9.2" \
+      release="1" \
+      summary="Nuxeo Digital Asset Platform" \
+      description="The Nuxeo platform image packaged as a container" \
+      url="https://www.nuxeo.com" \
+      run='docker run -tdi -p 8080:8080 --name ${NAME} ${IMAGE}' \
+      io.k8s.description="Starts a Nuxeo Platform server." \
+      io.k8s.display-name="Nuxeo" \
+      io.openshift.expose-services="8080/http" \
+      io.openshift.tags="nuxeo" \
+      io.openshift.min-memory="2Gi" \
+      io.openshift.min-cpu="2"
+
 # install java
 RUN yum install -y \
-       java-1.8.0-openjdk 
-
-# install wget
-RUN yum -y install wget 
-# install unzip
-RUN yum -y install unzip 
+       java-1.8.0-openjdk wget unzip
 
 #Add repositories need it for ffmpeg2theora and ffmpeg
 ARG EPEL_RPM_URL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -37,7 +47,11 @@ RUN yum -y upgrade && yum -y install \
     libreoffice-headless  \
     libwpd-tools \
     perl-Image-ExifTool \
-    ghostscript    
+    ghostscript \
+    && yum clean all
+
+ADD licenses /licenses
+ADD help.1 /help.1
 
 
 # Remove setuid/setgid binaries from images for security
