@@ -6,6 +6,7 @@ import os, sys, shutil, base64, getpass, json
 import re
 import urllib2
 from distutils.version import StrictVersion
+from distutils.dir_util import copy_tree
 
 
 connect_user = raw_input("Please enter a connect account user: ")
@@ -102,6 +103,10 @@ for tp in target_platforms:
                 shutil.copy("templates/pre-9.2/nuxeo.conf", d)
             else:
                 shutil.copy("templates/nuxeo.conf", d)
+
+        if variant == 'rhel':
+            copy_tree("templates/rhel", d )
+            
 
 
 
