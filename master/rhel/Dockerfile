@@ -50,7 +50,7 @@ RUN yum -y upgrade && yum -y install \
     ghostscript \
     && yum clean all
 
-ADD licences /licences
+ADD licenses /licenses
 ADD help.1 /help.1
 
 
