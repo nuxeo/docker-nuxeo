@@ -4,12 +4,12 @@ set -e
 
 NUXEO_DATA=${NUXEO_DATA:-/var/lib/nuxeo/data}
 NUXEO_LOG=${NUXEO_LOG:-/var/log/nuxeo}
-
+NUXEO_FORCE_CONF=${NUXEO_FORCE_CONF:-false}
 NUXEO_MPINSTALL_OPTIONS=${NUXEO_MPINSTALL_OPTIONS:---relax=false}
 
 
 if [ "$1" = 'nuxeoctl' ]; then
-  if [ ! -f $NUXEO_HOME/configured ] || [ -n $NUXEO_FORCE_CONF ]; then
+  if [[ ( ! -f $NUXEO_HOME/configured ) || "true" == $NUXEO_FORCE_CONF  ]]; then
     # Start by the template
     cat /etc/nuxeo/nuxeo.conf.template > $NUXEO_CONF
 
