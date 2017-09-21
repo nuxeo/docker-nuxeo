@@ -46,6 +46,7 @@ for tp in target_platforms:
 
     
     for variant in VARIANTS:
+        pre93 = version != "master" and StrictVersion(version) < StrictVersion("9.3")
         pre92 = version != "master" and StrictVersion(version) < StrictVersion("9.2")
         pre91 = version != "master" and StrictVersion(version) < StrictVersion("9.1")
         pre810 = version != "master" and StrictVersion(version) < StrictVersion("8.10")
@@ -101,6 +102,8 @@ for tp in target_platforms:
 
             if pre92:
                 shutil.copy("templates/pre-9.2/nuxeo.conf", d)
+            elif pre93:
+                shutil.copy("templates/pre-9.3/nuxeo.conf", d)
             else:
                 shutil.copy("templates/nuxeo.conf", d)
 
