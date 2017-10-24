@@ -38,7 +38,7 @@ jobs:
   - put: identifix-docker-repo
     params:
       load: identifix-docker-repo
-      dockerfile: project/9.2/Dockerfile
+      dockerfile: docker-nuxeo/9.2/Dockerfile
       tag: version/version
       tag_as_latest: true
 
@@ -77,6 +77,7 @@ resources:
   source:
     uri: git@github.com:Identifix/docker-nuxeo.git
     private_key: ((data-ssh))
+    paths: ['9.2']
     ignore_paths:
     - LICENSE
     - NOTICE.md

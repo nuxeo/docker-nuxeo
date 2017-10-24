@@ -45,7 +45,7 @@ RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
     && chmod g+rwX $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
     && $NUXEO_HOME/bin/nuxeoctl mp-init
 
-COPY docker-template $NUXEO_HOME/templates/docker
+COPY $NUXEO_VERSION/docker-template $NUXEO_HOME/templates/docker
 COPY nuxeo.conf /etc/nuxeo/nuxeo.conf.template
 ENV NUXEO_CONF /etc/nuxeo/nuxeo.conf
 
