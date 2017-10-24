@@ -38,7 +38,7 @@ jobs:
   - put: identifix-docker-repo
     params:
       load: identifix-docker-repo
-      dockerfile: docker-nuxeo/9.2/Dockerfile
+      dockerfile: project/9.2/Dockerfile
       tag: version/version
       tag_as_latest: true
 
@@ -97,7 +97,7 @@ resources:
 - name: identifix-docker-repo
   type: docker-image
   source:
-    repository: ((nuxeo-studio-resource.docker_registry_repo))
+    repository: docker-registry-dev.gp1.axadmin.net:443/docker-nuxeo
     username: ((nuxeo-studio-resource.docker_registry_user))
     password: ((nuxeo-studio-resource.docker_registry_password))
 

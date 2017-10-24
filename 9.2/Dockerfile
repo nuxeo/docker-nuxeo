@@ -27,7 +27,6 @@ ARG NUXEO_VERSION=9.2
 ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-9.2/nuxeo-server-9.2-tomcat.zip
 ARG NUXEO_MD5=fe08b58a881391fc74344880f80b7a78
 
-
 # Create Nuxeo user
 RUN useradd -m -d /home/$NUXEO_USER -u 1000 -s /bin/bash $NUXEO_USER
 
