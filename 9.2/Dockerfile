@@ -46,7 +46,7 @@ RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
     && $NUXEO_HOME/bin/nuxeoctl mp-init
 
 COPY $NUXEO_VERSION/docker-template $NUXEO_HOME/templates/docker
-COPY nuxeo.conf /etc/nuxeo/nuxeo.conf.template
+COPY $NUXEO_VERSION/nuxeo.conf /etc/nuxeo/nuxeo.conf.template
 ENV NUXEO_CONF /etc/nuxeo/nuxeo.conf
 
 # Protecting writeable directories to support arbitrary User IDs for OpenShift
