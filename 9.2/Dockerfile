@@ -65,7 +65,7 @@ RUN chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME \
 ENV PATH $NUXEO_HOME/bin:$PATH
 
 WORKDIR $NUXEO_HOME
-COPY docker-entrypoint.sh /
+COPY $NUXEO_VERSION/docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 EXPOSE 8787
 EXPOSE 8080
