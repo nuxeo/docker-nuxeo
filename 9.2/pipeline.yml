@@ -75,7 +75,7 @@ resources:
 - name: docker-nuxeo
   type: git
   source:
-    uri: git@github.com:Identifix/docker-nuxeo.git
+    uri: ((docker-nuxeo.git_uri))
     private_key: ((data-ssh))
     paths: ['9.2']
     ignore_paths:
@@ -89,7 +89,7 @@ resources:
   source:
     driver: git
     initial_version: 1.0.0-rc.0
-    uri: git@github.com:Identifix/docker-nuxeo.git
+    uri: ((docker-nuxeo.git_uri))
     branch: version
     file: version
     private_key: ((data-ssh))
@@ -97,7 +97,7 @@ resources:
 - name: identifix-docker-repo
   type: docker-image
   source:
-    repository: docker-registry-dev.gp1.axadmin.net:443/docker-nuxeo
-    username: ((nuxeo-studio-resource.docker_registry_user))
-    password: ((nuxeo-studio-resource.docker_registry_password))
+    repository: ((docker-nuxeo.docker_registry_repo))
+    username: ((docker-nuxeo.docker_registry_user))
+    password: ((docker-nuxeo.docker_registry_password)) 
 
