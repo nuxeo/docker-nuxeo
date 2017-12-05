@@ -8,10 +8,10 @@ env:
  - VERSION=7.10 VARIANT=centos
  - VERSION=8.10
  - VERSION=8.10 VARIANT=centos
- - VERSION=9.1
- - VERSION=9.1 VARIANT=centos
  - VERSION=9.2
  - VERSION=9.2 VARIANT=centos
+ - VERSION=9.3
+ - VERSION=9.3 VARIANT=centos
  - VERSION=master
  - VERSION=master VARIANT=centos
 
