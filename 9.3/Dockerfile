@@ -45,8 +45,8 @@ RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
     && chmod g+rwX $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
     && $NUXEO_HOME/bin/nuxeoctl mp-init
 
-COPY docker-template $NUXEO_HOME/templates/docker
-COPY nuxeo.conf /etc/nuxeo/nuxeo.conf.template
+COPY $NUXEO_VERSION/docker-template $NUXEO_HOME/templates/docker
+COPY $NUXEO_VERSION/nuxeo.conf /etc/nuxeo/nuxeo.conf.template
 ENV NUXEO_CONF /etc/nuxeo/nuxeo.conf
 
 # Protecting writeable directories to support arbitrary User IDs for OpenShift
@@ -65,10 +65,10 @@ RUN chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME \
 ENV PATH $NUXEO_HOME/bin:$PATH
 
 WORKDIR $NUXEO_HOME
-COPY docker-entrypoint.sh /
+COPY $NUXEO_VERSION/docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 EXPOSE 8080
-EXPOSE 8787
+#EXPOSE 8787
 CMD ["nuxeoctl","console"]
 
 USER 1000
