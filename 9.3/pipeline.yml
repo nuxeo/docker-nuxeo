@@ -39,7 +39,7 @@ jobs:
     params:
       load: identifix-docker-repo
       dockerfile: project/9.3/Dockerfile
-      tag: project/9.2/version
+      tag: project/9.3/version
       tag_as_latest: true
 
 - name: major
@@ -65,7 +65,7 @@ jobs:
   serial_groups: [version]
   plan:
   - get: version
-    passed: [build]
+    passed: [shipit]
     params: {bump: patch, pre: rc}
     trigger: true
   - put: version

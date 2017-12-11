@@ -65,7 +65,7 @@ jobs:
   serial_groups: [version]
   plan:
   - get: version
-    passed: [build]
+    passed: [shipit]
     params: {bump: patch, pre: rc}
     trigger: true
   - put: version
