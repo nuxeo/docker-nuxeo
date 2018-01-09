@@ -24,8 +24,8 @@ RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
 ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /opt/nuxeo/server
 ARG NUXEO_VERSION=9.10
-ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/staging/nuxeo-server-9.10-tomcat.zip
-ARG NUXEO_MD5=74928c936edd8afbf2c1751d2c93b449
+ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-9.10/nuxeo-server-9.10-tomcat.zip
+ARG NUXEO_MD5=327d23bbd5558565694027b11c0dd82a
 
 
 # Create Nuxeo user
