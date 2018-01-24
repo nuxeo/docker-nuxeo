@@ -4,7 +4,7 @@ MAINTAINER Nuxeo <packagers@nuxeo.com>
 
 LABEL name="nuxeo/nuxeo" \
       vendor="Nuxeo" \
-      version="9.2" \
+      version="%%NUXEO_VERSION%%" \
       release="1" \
       summary="Nuxeo Digital Asset Platform" \
       description="The Nuxeo platform image packaged as a container" \
@@ -44,7 +44,7 @@ RUN yum -y upgrade && yum -y install \
     ffmpeg2theora \
     ufraw \
     poppler-utils \
-    libreoffice-headless  \
+    libreoffice-core  \
     libwpd-tools \
     perl-Image-ExifTool \
     ghostscript \

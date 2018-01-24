@@ -26,7 +26,7 @@ master['downloadLink'] = "http://community.nuxeo.com/static/latest-snapshot/nuxe
 target_platforms.append(master)
 
 
-MIN_VERSION='6.0'
+MIN_VERSION='7.10'
 VARIANTS = ['ubuntu', 'centos', 'rhel']
 
 travis = []

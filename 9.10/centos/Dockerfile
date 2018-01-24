@@ -1,41 +1,21 @@
 # vim:set ft=dockerfile:
-FROM registry.access.redhat.com/rhel7
+FROM centos:7
 MAINTAINER Nuxeo <packagers@nuxeo.com>
-
-LABEL name="nuxeo/nuxeo" \
-      vendor="Nuxeo" \
-      version="%%NUXEO_VERSION%%" \
-      release="1" \
-      summary="Nuxeo Digital Asset Platform" \
-      description="The Nuxeo platform image packaged as a container" \
-      url="https://www.nuxeo.com" \
-      run='docker run -tdi -p 8080:8080 --name ${NAME} ${IMAGE}' \
-      io.k8s.description="Starts a Nuxeo Platform server." \
-      io.k8s.display-name="Nuxeo" \
-      io.openshift.expose-services="8080/http" \
-      io.openshift.tags="nuxeo" \
-      io.openshift.min-memory="2Gi" \
-      io.openshift.min-cpu="2"
 
 # install java
 RUN yum install -y \
-       java-1.8.0-openjdk wget unzip
+       java-1.8.0-openjdk 
+
+# install wget
+RUN yum -y install wget 
 
 #Add repositories need it for ffmpeg2theora and ffmpeg
-ARG EPEL_RPM_URL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 ARG NUX_GPG_KEY_URL=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
 ARG NUX_DEXTOP_RPM_URL=http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
-RUN wget ${EPEL_RPM_URL} \
-    && rpm -Uvh epel-release-latest-7*.rpm \
+RUN yum -y install epel-release \
     && rpm --import ${NUX_GPG_KEY_URL} \
     && rpm -Uvh ${NUX_DEXTOP_RPM_URL}
 
-## must find another way to install it, need it for ffmpeg
-ARG NUX_DEXTOP_FRIBIDI_RPM_URL=ftp://ftp.pbone.net/mirror/li.nux.ro/download/nux/dextop/retired/libfribidi-0.19.2-3.el7.nux.x86_64.rpm
-RUN rpm -Uvh ${NUX_DEXTOP_FRIBIDI_RPM_URL}
-
-# enable repo for libreoffice
-RUN yum-config-manager --enable rhel-7-server-optional-rpms
 # Add needed convert tools
 RUN yum -y upgrade && yum -y install \
     perl \
@@ -44,14 +24,10 @@ RUN yum -y upgrade && yum -y install \
     ffmpeg2theora \
     ufraw \
     poppler-utils \
-    libreoffice-core  \
+    libreoffice \
     libwpd-tools \
     perl-Image-ExifTool \
-    ghostscript \
-    && yum clean all
-
-ADD licenses /licenses
-ADD help.1 /help.1
+    ghostscript
 
 
 # Remove setuid/setgid binaries from images for security
@@ -59,9 +35,9 @@ RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
 
 ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /opt/nuxeo/server
-ARG NUXEO_VERSION=master
-ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/latest-snapshot/nuxeo-server-tomcat,SNAPSHOT.zip
-ARG NUXEO_MD5=noMD5check
+ARG NUXEO_VERSION=9.10
+ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-9.10/nuxeo-server-9.10-tomcat.zip
+ARG NUXEO_MD5=327d23bbd5558565694027b11c0dd82a
 
 
 # Create Nuxeo user
