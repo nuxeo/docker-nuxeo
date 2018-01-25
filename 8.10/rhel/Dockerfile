@@ -19,7 +19,7 @@ LABEL name="nuxeo/nuxeo" \
 
 # install java
 RUN yum install -y \
-       java-1.8.0-openjdk wget unzip
+       java-1.8.0-openjdk java-1.8.0-openjdk-devel wget unzip
 
 #Add repositories need it for ffmpeg2theora and ffmpeg
 ARG EPEL_RPM_URL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm

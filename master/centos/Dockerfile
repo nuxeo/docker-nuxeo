@@ -4,7 +4,7 @@ MAINTAINER Nuxeo <packagers@nuxeo.com>
 
 # install java
 RUN yum install -y \
-       java-1.8.0-openjdk 
+       java-1.8.0-openjdk java-1.8.0-openjdk-devel 
 
 # install wget
 RUN yum -y install wget 
