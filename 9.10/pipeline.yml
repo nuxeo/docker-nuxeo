@@ -76,7 +76,7 @@ resources:
   type: git
   source:
     uri: ((docker-nuxeo.git_uri))
-    private_key: ((data-ssh))
+    private_key: ((github.ssh_key))
     paths: ['9.10']
     ignore_paths:
     - LICENSE
@@ -92,7 +92,7 @@ resources:
     uri: ((docker-nuxeo.git_uri))
     branch: version
     file: version
-    private_key: ((data-ssh))
+    private_key: ((github.ssh_key))
 
 - name: identifix-docker-repo
   type: docker-image
