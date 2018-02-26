@@ -71,7 +71,7 @@ ENV PATH $NUXEO_HOME/bin:$PATH
 WORKDIR $NUXEO_HOME
 COPY $NUXEO_VERSION/docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
-EXPOSE 8080
+#EXPOSE 8080
 #EXPOSE 8787
 CMD ["nuxeoctl","console"]
 
