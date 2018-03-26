@@ -1,0 +1,202 @@
+.TH Name
+.PP
+nuxeo \- Nuxeo container image
+
+
+.SH Description
+.PP
+The Nuxeo Platform is a highly customizable and extensible content management platform for building business applications.
+
+.PP
+
+
+
+.SH Usage
+.SH Start a bare nuxeo instance
+.PP
+.RS
+
+.nf
+$ docker run \-\-name mynuxeo \-p 8080:8080 \-d registry.connect.redhat.com/nuxeo/nuxeo
+
+.fi
+.RE
+
+.PP
+This image includes \fB\fCEXPOSE 8080\fR (the nuxeo port). The default Nuxeo configuration is applied which feature an embedded database (H2), and an embedded Elasticsearch instance. This setup is not suitable for production. See below to know how to setup a production ready container by specifying environment variables.
+
+.PP
+The Nuxeo platform is accesible at http://${DOCKER\_HOST}:8080/ and default User and Password are Administrator/Administrator.
+
+.SH Start a nuxeo with some additional packages
+.PP
+.RS
+
+.nf
+$ docker run \-\-name mynuxeo \-p 8080:8080 \-e NUXEO\_PACKAGES="nuxeo\-web\-mobile nuxeo\-drive nuxeo\-diff nuxeo\-spreadsheet nuxeo\-dam nuxeo\-template\-rendering nuxeo\-template\-rendering\-samples nuxeo\-showcase\-content"
+registry.connect.redhat.com/nuxeo/nuxeo
+
+.fi
+.RE
+
+.PP
+This will install the same image as above but comes with some demo Nuxeo packages to demonstrate its various usage (DAM, DM, search etc...)
+
+.PP
+You can find additional informations on how to use this image in Nuxeo documentation
+\[la]https://doc.nuxeo.com/nxdoc/setting-up-your-nuxeo-environment/\[ra]
+
+.SH Environment Variables
+.PP
+The Nuxeo image uses several environment variable that allow to specify a more specific setup.
+
+.SS \fB\fCNUXEO\_DB\_TYPE\fR
+.PP
+This defines the database type to use. By default it sets an H2 embedded database that is suitable for test purpose only. When specifying a DB type, other variable mays help :
+.IP \(bu 2
+\fB\fCNUXEO\_DB\_HOST\fR : If \fB\fCNUXEO\_DB\_TYPE\fR is defined, this variable is mandatory and has to point to the DB server host.
+.IP \(bu 2
+\fB\fCNUXEO\_DB\_NAME\fR : name of the database to use (\fB\fCnuxeo\fR by default)
+.IP \(bu 2
+\fB\fCNUXEO\_DB\_USER\fR : user to connect to the database (\fB\fCnuxeo\fR by default)
+.IP \(bu 2
+\fB\fCNUXEO\_DB\_PASSWORD\fR : the password to connect to the database (\fB\fCnuxeo\fR by default)
+
+.SS \fB\fCNUXEO\_TEMPLATES\fR
+.PP
+This variables allows to add additional Nuxeo configuration templates
+\[la]https://doc.nuxeo.com/x/0AB9\[ra] in the \fB\fCnuxeo.templates\fR configuration variable.
+
+.SS \fB\fCNUXEO\_ES\_HOSTS\fR
+.PP
+This variables allows to setup an external Elasticsearch cluster. Use a comma separated list of Elasticsearch hosts with the 9300 port. Additional environment vars may be setup like :
+.IP \(bu 2
+\fB\fCNUXEO\_ES\_CLUSTER\_NAME\fR : name of the Elasticsearch cluster to join
+.IP \(bu 2
+\fB\fCNUXEO\_ES\_INDEX\_NAME\fR: name of the index (\fB\fCnuxeo\fR by default)
+.IP \(bu 2
+\fB\fCNUXEO\_ES\_REPLICAS\fR : number or replicas (\fB\fC1\fR by default). If not 0, it means that your ES cluster must have enough node to fullfill the replicas setup.
+.IP \(bu 2
+\fB\fCNUXEO\_ES\_SHARDS\fR : number or shards (\fB\fC5\fR by default).
+
+.PP
+For instance :
+
+.PP
+.RS
+
+.nf
+NUXEO\_ES\_HOSTS=es1:9300,es2:9300
+NUXEO\_ES\_CLUSTER\_NAME=dockerCluster
+NUXEO\_ES\_INDEX\_NAME=nuxeo1
+NUXEO\_ES\_REPLICAS=0
+NUXEO\_ES\_SHARDS=5
+
+.fi
+.RE
+
+.SS \fB\fCNUXEO\_REDIS\_HOST\fR
+.PP
+In order to use Redis, just set up this variable to the Redis host address.
+
+.SS \fB\fCNUXEO\_REDIS\_PORT\fR
+.PP
+If Redis is setup, you can ovewrite the default port configuration (default to 6379)
+
+.SS \fB\fCNUXEO\_CLID\fR
+.PP
+Allow to setup a CLID for Nuxeo Connect registration. This parameter is in the form \fB\fCpart1\\npart2\fR, so depending on the environment you may have to escape the \fB\fC\\\fR character.
+
+.PP
+You can find additional informations the registration process in the Nuxeo documentation
+\[la]https://doc.nuxeo.com/nxdoc/setting-up-your-nuxeo-environment/\[ra]
+
+.SS \fB\fCNUXEO\_INSTALL\_HOTFIX\fR
+.PP
+This launch the install of latest Hotfixes. (\fB\fCtrue\fR by default, but needs a \fB\fCNUXEO\_CLID\fR to be setup)
+
+.SS \fB\fCNUXEO\_PACKAGES\fR
+.PP
+Allows to install Nuxeo packages
+\[la]https://doc.nuxeo.com/x/aAfF\[ra] at startup.
+
+.SS \fB\fCNUXEO\_URL\fR
+.PP
+This variable sets the URL where your Nuxeo instance will be joinable. It's used for instance to refer to it when sending server's address in mails.
+
+.SS \fB\fCNUXEO\_DATA\fR
+.PP
+Location of the Nuxeo data directory. (\fB\fC/var/lib/nuxeo/data\fR by default). You will likely customize NUXEO\_DATA to map it on docker volume so data like binaries stay persistent.
+
+.SS \fB\fCNUXEO\_LOG\fR
+.PP
+Location of the Nuxeo log directory. (\fB\fC/var/log/nuxeo\fR by default)
+
+.SS \fB\fCNUXEO\_AUTOMATION\_TRACE\fR
+.PP
+If set to "true", this will enable the automation trace mode
+\[la]https://doc.nuxeo.com/display/NXDOC/Automation+Tracing\[ra]\&.
+
+.SS \fB\fCNUXEO\_DEV\_MODE\fR
+.PP
+If set to "true", this will enable the development mode that will allow hot reload
+\[la]https://doc.nuxeo.com/display/CORG/Supporting+Hot+Reload\[ra] when developing with Nuxeo Studio
+\[la]http://www.nuxeo.com/products/studio/\[ra]\&.
+
+.SS \fB\fCNUXEO\_BINARY\_STORE\fR
+.PP
+Tells the location of the binary store which configure the binary storage
+\[la]https://doc.nuxeo.com/x/fYYZAQ\[ra]
+
+.SS \fB\fCNUXEO\_TRANSIENT\_STORE\fR
+.PP
+Tells the location of the transient storage
+\[la]http://doc.nuxeo.com/display/NXDOC/Transient+Store\[ra]
+
+.SS \fB\fCNUXEO\_DDL\_MODE\fR
+.PP
+Allows to setup Database creation option
+\[la]https://doc.nuxeo.com/x/hwQz#RepositoryConfiguration-DatabaseCreationOption\[ra] by fixing the \fB\fCddlMode\fR value.
+
+.SS \fB\fCNUXEO\_CUSTOM\_PARAM\fR
+.PP
+Allows to add custom parameters to \fB\fCnuxeo.conf\fR\&. Multiple parameters can be splitted by a \fB\fC\\n\fR\&. For instance :
+
+.PP
+.RS
+
+.nf
+NUXEO\_CUSTOM\_PARAM="repository.clustering.enabled=false\\nrepository.clustering.delay=1000"
+
+.fi
+.RE
+
+
+.SH How to extend this image
+.SH Adding additional configuration
+.PP
+If you would like to do additional setup in an image derived from this one, you can add a \fB\fC/nuxeo.conf\fR file that will be appended to the end of the regular \fB\fCnuxeo.conf\fR file.
+
+.PP
+.RS
+
+.nf
+FROM nuxeo:7.10
+ADD nuxeo.conf /nuxeo.conf
+
+.fi
+.RE
+
+.SH Launching custom shell scripts
+.PP
+You can add your own shell scripts in a special \fB\fC/docker\-entrypoint\-initnuxeo.d\fR directory. When ending in \fB\fC\&.sh\fR, they will be run on default entrypoint startup.
+
+.SH Why is this images so big ?
+.PP
+This image is big because it contains a lot of features. The nuxeo distribution itself is about 250M and in order to make cool things work like generating thumbnails or converting document to PDF we need some additional tools that are bundled in the image. We hope that in the future we will be able to delegate those conversions to external services that would be bundled as additional docker images.
+
+
+.SH License
+.PP
+View license information
+\[la]http://doc.nuxeo.com/x/gIK7\[ra] for the software contained in this image.
