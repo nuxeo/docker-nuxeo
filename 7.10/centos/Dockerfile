@@ -34,6 +34,7 @@ RUN find / -perm 6000 -type f -exec chmod a-s {} \; || true
 
 ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /opt/nuxeo/server
+ENV HOME /opt/nuxeo/server
 ARG NUXEO_VERSION=7.10
 ARG NUXEO_DIST_URL=http://community.nuxeo.com/static/releases/nuxeo-7.10/nuxeo-cap-7.10-tomcat.zip
 ARG NUXEO_MD5=de2084b1a6fab4b1c8fb769903b044f2
