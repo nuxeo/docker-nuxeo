@@ -55,7 +55,7 @@ ADD help.1 /help.1
 
 
 # Remove setuid/setgid binaries from images for security
-RUN find / -perm +6000 -type f -exec chmod a-s {} \; || true
+RUN find / -perm 6000 -type f -exec chmod a-s {} \; || true
 
 ENV NUXEO_USER nuxeo
 ENV NUXEO_HOME /opt/nuxeo/server
