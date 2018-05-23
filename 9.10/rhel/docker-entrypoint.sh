@@ -7,6 +7,13 @@ NUXEO_LOG=${NUXEO_LOG:-/var/log/nuxeo}
 NUXEO_FORCE_CONF=${NUXEO_FORCE_CONF:-false}
 NUXEO_MPINSTALL_OPTIONS=${NUXEO_MPINSTALL_OPTIONS:---relax=false}
 
+# Allow supporting arbitrary user id
+if ! whoami &> /dev/null; then
+  if [ -w /etc/passwd ]; then
+    sed /^nuxeo/d /etc/passwd > /tmp/passwd && cp /tmp/passwd /etc/passwd
+    echo "${NUXEO_USER:-nuxeo}:x:$(id -u):0:${NUXEO_USER:-nuxeo} user:${NUXEO_HOME}:/sbin/nologin" >> /etc/passwd
+  fi
+fi
 
 if [ "$1" = 'nuxeoctl' ]; then
   if [[ ( ! -f $NUXEO_HOME/configured ) || "true" == $NUXEO_FORCE_CONF  ]]; then

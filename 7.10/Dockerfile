@@ -56,7 +56,8 @@ RUN mkdir -p /var/lib/nuxeo/data \
     && mkdir -p /var/run/nuxeo \
     && chown -R 1000:0 /var/run/nuxeo && chmod -R g+rwX /var/run/nuxeo \
     && mkdir -p /docker-entrypoint-initnuxeo.d \
-    && chown -R 1000:0 /docker-entrypoint-initnuxeo.d && chmod -R g+rwX /docker-entrypoint-initnuxeo.d 
+    && chown -R 1000:0 /docker-entrypoint-initnuxeo.d && chmod -R g+rwX /docker-entrypoint-initnuxeo.d \
+    && chmod g=u /etc/passwd
 
 ENV PATH $NUXEO_HOME/bin:$PATH
 

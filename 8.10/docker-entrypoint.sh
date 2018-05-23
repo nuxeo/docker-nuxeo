@@ -5,6 +5,14 @@ NUXEO_CONF=$NUXEO_HOME/bin/nuxeo.conf
 NUXEO_DATA=${NUXEO_DATA:-/var/lib/nuxeo/data}
 NUXEO_LOG=${NUXEO_LOG:-/var/log/nuxeo}
 
+# Allow supporting arbitrary user id
+if ! whoami &> /dev/null; then
+  if [ -w /etc/passwd ]; then
+    sed /^nuxeo/d /etc/passwd > /tmp/passwd && cp /tmp/passwd /etc/passwd
+    echo "${NUXEO_USER:-nuxeo}:x:$(id -u):0:${NUXEO_USER:-nuxeo} user:${NUXEO_HOME}:/sbin/nologin" >> /etc/passwd
+  fi
+fi
+
 if [ "$1" = 'nuxeoctl' ]; then
   if [ ! -f $NUXEO_HOME/configured ]; then
 
