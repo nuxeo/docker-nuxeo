@@ -5,15 +5,15 @@ set -eu
 versions=(
 	7.10
 	8.10
-        9.3
-        9.10
+    9.10
+    10.1
 )
 
 declare -A aliases=(
 	[7.10]='7 LTS-2015'
-	[8.10]='8 LTS-2016'
-	[9.3]='FT'
-	[9.10]='9 LTS-2017 LTS latest'
+	[8.10]='8 LTS-2016'	
+	[9.10]='9 LTS-2017 LTS'
+	[10.1]='10 FT latest'
 )
 
 variants=(
