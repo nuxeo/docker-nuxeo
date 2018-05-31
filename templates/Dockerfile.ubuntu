@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     exiftool \
     ghostscript \
     libreoffice \
+    ffmpeg \
+    x264 \
  && rm -rf /var/lib/apt/lists/*
 
 %%RUN%%
