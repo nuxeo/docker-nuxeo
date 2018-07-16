@@ -74,6 +74,7 @@ jobs:
 resources:
 - name: docker-nuxeo
   type: git
+  check_every: 5m
   source:
     uri: ((docker-nuxeo.git_uri))
     private_key: ((github.ssh_key))
