@@ -11,7 +11,7 @@ versions=(
 
 declare -A aliases=(
 	[7.10]='7 LTS-2015'
-	[8.10]='8 LTS-2016'	
+	[8.10]='8 LTS-2016'
 	[9.10]='9 LTS-2017 LTS'
 	[10.1]='10 FT latest'
 )
@@ -49,8 +49,8 @@ dirCommit() {
 cat <<-EOH
 # this file is generated via https://github.com/nuxeo/docker-nuxeo/blob/$(fileCommit "$self")/$self
 
-Maintainers: Damien Metzler <dmetzler@nuxeo.com> (@damienmetzler),
-             Arnaud Kervern <akervern@nuxeo.com> (@arnaudke)
+Maintainers: Damien Metzler <dmetzler@nuxeo.com> (@dmetzler),
+             Arnaud Kervern <akervern@nuxeo.com> (@akervern)
 GitRepo: https://github.com/nuxeo/docker-nuxeo.git
 EOH
 
@@ -63,7 +63,7 @@ join() {
 for variant in "${variants[@]}"; do
 	for version in "${versions[@]}"; do
 		if [ $variant == "ubuntu" ]; then
-			DIR=$version		
+			DIR=$version
 		else
 			DIR=$version/$variant
 		fi
