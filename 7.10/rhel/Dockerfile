@@ -18,7 +18,8 @@ LABEL name="nuxeo/nuxeo" \
       io.openshift.min-cpu="2"
 
 # install java
-RUN yum install -y \
+RUN yum-config-manager --disable rhel-7-server-htb-rpms && \
+    yum install -y \
        java-1.8.0-openjdk java-1.8.0-openjdk-devel wget unzip
 
 #Add repositories need it for ffmpeg2theora and ffmpeg
