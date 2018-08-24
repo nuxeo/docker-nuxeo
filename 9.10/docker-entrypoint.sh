@@ -68,12 +68,6 @@ EOF
     nuxeoctl mp-install $NUXEO_PACKAGES $NUXEO_MPINSTALL_OPTIONS --accept=true
   fi
 
-  if [ "$2" = "console" ]; then
-    exec nuxeoctl console $NUXEOCTL_CONSOLE_OPTIONS
-  else
-    exec "$@"
-  fi
-
 fi
 
 
