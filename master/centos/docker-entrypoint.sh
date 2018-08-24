@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 set -e
 
 
@@ -30,15 +30,15 @@ EOF
     if [ -n "$NUXEO_CUSTOM_PARAM" ]; then
       printf "%b\n" "$NUXEO_CUSTOM_PARAM" >> $NUXEO_CONF
     fi
-    
+
     # Deprecated since 9.1, put a nuxeo.conf file in /docker-entrypoint-initnuxeo.d instead
     if [ -f /nuxeo.conf ]; then
       cat /nuxeo.conf >> $NUXEO_CONF
-    fi    
+    fi
 
     if [ -f /docker-entrypoint-initnuxeo.d/nuxeo.conf ]; then
       cat /docker-entrypoint-initnuxeo.d/nuxeo.conf >> $NUXEO_CONF
-    fi    
+    fi
     touch $NUXEO_HOME/configured
   fi
 
@@ -46,7 +46,7 @@ EOF
     case "$f" in
       *.sh)  echo "$0: running $f"; . "$f" ;;
       *.zip) echo "$0: installing Nuxeo package $f"; nuxeoctl mp-install $f ${NUXEO_MPINSTALL_OPTIONS} --accept=true ;;
-      instance.clid) echo "$0: moving clid to $NUXEO_DATA"; mv $f $NUXEO_DATA/instance.clid ;;      
+      instance.clid) echo "$0: moving clid to $NUXEO_DATA"; mv $f $NUXEO_DATA/instance.clid ;;
       *)     echo "$0: ignoring $f" ;;
     esac
   done
