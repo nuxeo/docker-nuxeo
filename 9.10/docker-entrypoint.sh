@@ -69,7 +69,7 @@ EOF
   fi
 
   if [ "$2" = "console" ]; then
-    exec nuxeoctl console $NUXEOCTL_CONSOLE_OPTIONS
+    exec nuxeoctl console
   else
     exec "$@"
   fi
