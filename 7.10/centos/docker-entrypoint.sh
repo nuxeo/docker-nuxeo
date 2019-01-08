@@ -118,7 +118,7 @@ EOF
     case "$f" in
       *.sh)  echo "$0: running $f"; . "$f" ;;
       *.zip) echo "$0: installing Nuxeo package $f"; nuxeoctl mp-install $f --accept=true ;;
-      *.clid) echo "$0: moving clid to $NUXEO_DATA"; mv $f $NUXEO_DATA ;;
+      *.clid) echo "$0: copying clid to $NUXEO_DATA"; cp $f $NUXEO_DATA ;;
       *)     echo "$0: ignoring $f" ;;
     esac
     echo
