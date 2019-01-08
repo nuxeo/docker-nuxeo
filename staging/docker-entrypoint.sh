@@ -39,7 +39,7 @@ EOF
     case "$f" in
       *.sh)  echo "$0: running $f"; . "$f" ;;
       *.zip) echo "$0: installing Nuxeo package $f"; nuxeoctl mp-install $f ${NUXEO_MPINSTALL_OPTIONS} --accept=true ;;
-      instance.clid) echo "$0: moving clid to $NUXEO_DATA"; mv $f $NUXEO_DATA/instance.clid ;;      
+      *.clid) echo "$0: copying clid to $NUXEO_DATA"; cp $f $NUXEO_DATA/ ;;
       *)     echo "$0: ignoring $f" ;;
     esac
   done
