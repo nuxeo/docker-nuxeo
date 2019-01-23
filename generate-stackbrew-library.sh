@@ -13,7 +13,7 @@ declare -A aliases=(
 	[7.10]='7 LTS-2015'
 	[8.10]='8 LTS-2016'
 	[9.10]='9 LTS-2017 LTS'
-	[10.10]='10 LTS-2019 LTS latest'
+	[10.10]='10 LTS-2019 LTS FT latest'
 )
 
 variants=(
