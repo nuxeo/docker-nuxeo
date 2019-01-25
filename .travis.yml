@@ -2,8 +2,6 @@ language: bash
 services: docker
 
 env:
- - VERSION=7.10
- - VERSION=7.10 VARIANT=centos
  - VERSION=10.10
  - VERSION=10.10 VARIANT=centos
  - VERSION=8.10

@@ -15,7 +15,7 @@ connect_password = getpass.getpass("Please enter the connect password: ")
 
 request = urllib2.Request("https://connect.nuxeo.com/nuxeo/site/target-platforms?filterDisabled=true&filterRestricted=true&filterDeprecated=true")
 base64string = base64.encodestring('%s:%s' % (connect_user, connect_password)).replace('\n', '')
-request.add_header("Authorization", "Basic %s" % base64string)   
+request.add_header("Authorization", "Basic %s" % base64string)
 target_platforms_json = urllib2.urlopen(request).read()
 target_platforms = json.loads(target_platforms_json)
 
@@ -30,9 +30,9 @@ MIN_VERSION='7.10'
 VARIANTS = ['ubuntu', 'centos', 'rhel']
 
 travis = []
-    
+
 for tp in target_platforms:
-    
+
     version = tp['version']
     if version != "master" and StrictVersion(version) < StrictVersion(MIN_VERSION) :
         continue
@@ -41,11 +41,12 @@ for tp in target_platforms:
     dist_url = tp['downloadLink']
     if version == "master":
         md5="noMD5check"
-    else: 
+    else:
         md5 = urllib2.urlopen("%s.md5" % dist_url).read().split(" ")[0]
 
-    
+
     for variant in VARIANTS:
+        pre1010 = version != "master" and StrictVersion(version) < StrictVersion("10.10")
         pre93 = version != "master" and StrictVersion(version) < StrictVersion("9.3")
         pre92 = version != "master" and StrictVersion(version) < StrictVersion("9.2")
         pre91 = version != "master" and StrictVersion(version) < StrictVersion("9.1")
@@ -90,12 +91,12 @@ for tp in target_platforms:
 
         with open(dockerfile, 'w') as dfile:
           dfile.write(docker_content)
-        
 
-        if pre91:            
+
+        if pre91:
             shutil.copy("templates/pre-9.1/docker-entrypoint.sh", d)
         else:
-            shutil.copy("templates/docker-entrypoint.sh", d)            
+            shutil.copy("templates/docker-entrypoint.sh", d)
             if(os.path.exists(d + '/docker-template')):
                 shutil.rmtree(d + '/docker-template')
             shutil.copytree("templates/docker-template", d + '/docker-template')
@@ -107,9 +108,12 @@ for tp in target_platforms:
             else:
                 shutil.copy("templates/nuxeo.conf", d)
 
+        if not pre1010:
+            shutil.rmtree(d + '/docker-template/config')
+
         if variant == 'rhel':
             copy_tree("templates/rhel", d )
-            
+
 
 
 
