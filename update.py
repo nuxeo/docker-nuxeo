@@ -105,6 +105,8 @@ for tp in target_platforms:
                 shutil.copy("templates/pre-9.2/nuxeo.conf", d)
             elif pre93:
                 shutil.copy("templates/pre-9.3/nuxeo.conf", d)
+            elif pre1010:
+                shutil.copy("templates/pre-10.10/nuxeo.conf", d)
             else:
                 shutil.copy("templates/nuxeo.conf", d)
 
