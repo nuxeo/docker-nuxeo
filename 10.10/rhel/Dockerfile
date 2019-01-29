@@ -81,7 +81,8 @@ RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
     && chmod +x $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
     # For arbitrary user in the admin group
     && chmod g+rwX $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
-    && $NUXEO_HOME/bin/nuxeoctl mp-init
+    && $NUXEO_HOME/bin/nuxeoctl mp-init \
+    && chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME
 
 COPY docker-template $NUXEO_HOME/templates/docker
 COPY nuxeo.conf /etc/nuxeo/nuxeo.conf.template
@@ -89,8 +90,7 @@ ENV NUXEO_CONF /etc/nuxeo/nuxeo.conf
 
 # Protecting writeable directories to support arbitrary User IDs for OpenShift
 # https://docs.openshift.com/container-platform/3.4/creating_images/guidelines.html
-RUN chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME \
-    && chown -R 1000:0 /etc/nuxeo && chmod g+rwX /etc/nuxeo && rm -f $NUXEO_HOME/bin/nuxeo.conf \
+RUN chown -R 1000:0 /etc/nuxeo && chmod g+rwX /etc/nuxeo && rm -f $NUXEO_HOME/bin/nuxeo.conf \
     && mkdir -p /var/lib/nuxeo/data \
     && chown -R 1000:0 /var/lib/nuxeo/data && chmod -R g+rwX /var/lib/nuxeo/data \
     && mkdir -p /var/log/nuxeo \
