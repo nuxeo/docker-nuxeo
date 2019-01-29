@@ -44,10 +44,8 @@ RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
     && rm -rf /tmp/nuxeo-distribution* \
     && chmod +x $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
     # For arbitrary user in the admin group
-    && chmod g+rwX $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh
-
-
-RUN chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME
+    && chmod g+rwX $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
+    && chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME
 
 # Protecting writeable directories to support arbitrary User IDs for OpenShift
 # https://docs.openshift.com/container-platform/3.4/creating_images/guidelines.html
