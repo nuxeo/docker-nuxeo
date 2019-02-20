@@ -16,6 +16,13 @@ declare -A aliases=(
 	[10.10]='10 LTS-2019 LTS FT latest'
 )
 
+declare -A arch
+arch=(
+	[7.10]='amd64'
+	[8.10]='amd64'
+	[9.10]='amd64'
+)
+
 variants=(
 	ubuntu
 )
@@ -83,6 +90,7 @@ for variant in "${variants[@]}"; do
 		echo
 		cat <<-EOE
 			Tags: $(join ', ' "${variantAliases[@]}")
+			Architectures: ${arch[$version]:-amd64, arm64v8}
 			GitCommit: $commit
 			Directory: $DIR
 		EOE
