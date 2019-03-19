@@ -46,6 +46,7 @@ for tp in target_platforms:
 
 
     for variant in VARIANTS:
+        pre111 = version != "master" and StrictVersion(version) < StrictVersion("11.1")
         pre1010 = version != "master" and StrictVersion(version) < StrictVersion("10.10")
         pre93 = version != "master" and StrictVersion(version) < StrictVersion("9.3")
         pre92 = version != "master" and StrictVersion(version) < StrictVersion("9.2")
@@ -61,6 +62,9 @@ for tp in target_platforms:
                 travis.append(' - VERSION=%s VARIANT=%s' % (version, variant))
         if pre810 and os.path.exists('templates/pre-8.10/Dockerfile.' + variant):
             with open('templates/pre-8.10/Dockerfile.' + variant , 'r') as tmpfile:
+               template = tmpfile.read()
+        elif pre111 and os.path.exists('templates/pre-11.1/Dockerfile.' + variant):
+            with open('templates/pre-11.1/Dockerfile.' + variant , 'r') as tmpfile:
                template = tmpfile.read()
         else:
             with open('templates/Dockerfile.' + variant , 'r') as tmpfile:
@@ -107,6 +111,8 @@ for tp in target_platforms:
                 shutil.copy("templates/pre-9.3/nuxeo.conf", d)
             elif pre1010:
                 shutil.copy("templates/pre-10.10/nuxeo.conf", d)
+            elif pre111:
+                shutil.copy("templates/pre-11.1/nuxeo.conf", d)
             else:
                 shutil.copy("templates/nuxeo.conf", d)
 

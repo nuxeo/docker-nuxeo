@@ -20,7 +20,7 @@ LABEL name="nuxeo/nuxeo" \
 # install java
 RUN yum-config-manager --disable rhel-7-server-htb-rpms && \
     yum install -y \
-       java-1.8.0-openjdk java-1.8.0-openjdk-devel wget unzip
+       java-11-openjdk wget unzip
 
 #Add repositories need it for ffmpeg2theora and ffmpeg
 ARG EPEL_RPM_URL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm

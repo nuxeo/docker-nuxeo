@@ -72,4 +72,3 @@ CMD ["nuxeoctl","console"]
 
 
 USER 1000
-
