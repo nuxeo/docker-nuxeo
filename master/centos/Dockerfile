@@ -2,12 +2,15 @@
 FROM centos:7
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
-# install java
-RUN yum install -y \
-       java-1.8.0-openjdk java-1.8.0-openjdk-devel 
+# install wget / tar
+RUN yum -y install wget tar
 
-# install wget
-RUN yum -y install wget 
+# install java
+RUN wget https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz \
+    && echo "ce52c5844200c569a50a869e579d88f6 openjdk-11.0.2_linux-x64_bin.tar.gz" | md5sum -c - \
+    && tar zxvf openjdk-11.0.2_linux-x64_bin.tar.gz \
+    && mv jdk-11.0.2 /usr/local/
+ENV JAVA_HOME /usr/local/jdk-11.0.2
 
 #Add repositories need it for ffmpeg2theora and ffmpeg
 ARG NUX_GPG_KEY_URL=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro

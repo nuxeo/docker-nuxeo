@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-FROM       openjdk:8-jdk
+FROM       openjdk:11-jdk
 MAINTAINER Nuxeo <packagers@nuxeo.com>
 
 # Add needed convert tools
