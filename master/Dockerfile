@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libreoffice \
     ffmpeg \
     x264 \
-    lsof \
  && rm -rf /var/lib/apt/lists/*
 
 
