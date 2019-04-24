@@ -107,7 +107,6 @@ WORKDIR $NUXEO_HOME
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 EXPOSE 8080
-EXPOSE 8787
 CMD ["nuxeoctl","console"]
 
 USER 1000
