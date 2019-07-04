@@ -47,6 +47,8 @@ EOF
       *.sh)  echo "$0: running $f"; . "$f" ;;
       *.zip) echo "$0: installing Nuxeo package $f"; nuxeoctl mp-install $f ${NUXEO_MPINSTALL_OPTIONS} --accept=true ;;
       *.clid) echo "$0: copying clid to $NUXEO_DATA"; cp $f $NUXEO_DATA/ ;;
+      # Special case for nuxeo.conf handled above, don't log
+      *nuxeo.conf) ;;
       *)     echo "$0: ignoring $f" ;;
     esac
   done
