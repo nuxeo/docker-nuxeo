@@ -81,7 +81,6 @@ RUN curl -fsSL "${NUXEO_DIST_URL}" -o /tmp/nuxeo-distribution-tomcat.zip \
     && chmod +x $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
     # For arbitrary user in the admin group
     && chmod g+rwX $NUXEO_HOME/bin/*ctl $NUXEO_HOME/bin/*.sh \
-    && $NUXEO_HOME/bin/nuxeoctl mp-init \
     && chown -R 1000:0 $NUXEO_HOME && chmod -R g+rwX $NUXEO_HOME
 
 COPY docker-template $NUXEO_HOME/templates/docker
