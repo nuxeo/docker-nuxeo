@@ -42,7 +42,7 @@ EOF
     touch $NUXEO_HOME/configured
   fi
 
-  for f in /docker-entrypoint-initnuxeo.d/*; do
+  find /docker-entrypoint-initnuxeo.d -type f | while read f; do
     case "$f" in
       *.sh)  echo "$0: running $f"; . "$f" ;;
       *.zip) echo "$0: installing Nuxeo package $f"; nuxeoctl mp-install $f ${NUXEO_MPINSTALL_OPTIONS} --accept=true ;;
