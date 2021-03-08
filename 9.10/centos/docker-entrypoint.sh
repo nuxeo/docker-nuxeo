@@ -45,7 +45,7 @@ EOF
   for f in /docker-entrypoint-initnuxeo.d/*; do
     case "$f" in
       *.sh)  echo "$0: running $f"; . "$f" ;;
-      *.zip) echo "$0: installing Nuxeo package $f"; nuxeoctl mp-install $f ${NUXEO_MPINSTALL_OPTIONS} --accept=true ;;
+      *.zip) echo "$0: Adding Nuxeo package to install $f"; NUXEO_PACKAGES="$NUXEO_PACKAGES $f" ;;
       *.clid) echo "$0: copying clid to $NUXEO_DATA"; cp $f $NUXEO_DATA/ ;;
       # Special case for nuxeo.conf handled above, don't log
       *nuxeo.conf) ;;
